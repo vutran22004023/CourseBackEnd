@@ -34,6 +34,8 @@
     "qs": "^6.12.1",
     "random-js": "^2.1.0",
     "redis": "^4.7.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "vm": "^0.1.0"
   },
   "devDependencies": {
