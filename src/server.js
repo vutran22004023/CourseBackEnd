@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import passport from './configs/passport.config.js';
 import os from 'os';
 import redisClient from './configs/redisClient.config.js';
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsdoc from 'swagger-jsdoc'
 const app = express();
 
 // Get local IP address function
@@ -40,6 +42,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
 
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'CourseNiver (API)',
+      version: '1.0.0',
+    },
+  },
+  apis: ['./src/routes/*.js'],
+}
+const openapiSpecification = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 app.use('/api', routes);
 
 // Handle 404
