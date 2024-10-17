@@ -26,6 +26,7 @@ const router = express.Router();
  *         - name
  *         - email
  *         - password
+ *         - confirmPassword
  *       properties:
  *         name:
  *           type: string
@@ -36,6 +37,9 @@ const router = express.Router();
  *         password:
  *           type: string
  *           description: Mật khẩu của người dùng
+ *         confirmPassword:
+ *           type: string
+ *           description: Xác nhận mật khẩu
  *     ForgotPasswordInput:
  *       type: object
  *       required:
@@ -48,7 +52,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /login-in:
+ * /api/login-in:
  *   post:
  *     summary: Đăng nhập
  *     description: Người dùng đăng nhập vào hệ thống.
@@ -69,27 +73,21 @@ const router = express.Router();
 router.post('/login-in', Login_registerController.loginIn);
 /**
  * @swagger
- * /register:
+ * /api/login-in/google:
  *   post:
- *     summary: Đăng ký người dùng mới
- *     description: Tạo tài khoản người dùng mới.
+ *     summary: Đăng nhập bằng Google
+ *     description: Người dùng đăng nhập vào hệ thống bằng tài khoản Google.
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/RegisterInput'
  *     responses:
- *       201:
- *         description: Đăng ký thành công
- *       400:
- *         description: Đăng ký thất bại
+ *       200:
+ *         description: Đăng nhập thành công
+ *       401:
+ *         description: Đăng nhập thất bại
  */
 router.post('/login-in/google', Login_registerController.loginInGoogle);
 /**
  * @swagger
- * /register:
+ * /api/register:
  *   post:
  *     summary: Đăng ký người dùng mới
  *     description: Tạo tài khoản người dùng mới.
@@ -109,7 +107,7 @@ router.post('/login-in/google', Login_registerController.loginInGoogle);
 router.post('/register', Login_registerController.Register);
 /**
  * @swagger
- * /login-out:
+ * /api/login-out:
  *   post:
  *     summary: Đăng xuất
  *     description: Người dùng đăng xuất khỏi hệ thống.
@@ -121,7 +119,7 @@ router.post('/register', Login_registerController.Register);
 router.post('/login-out', Login_registerController.logout);
 /**
  * @swagger
- * /forgot-password:
+ * /api/forgot-password:
  *   post:
  *     summary: Quên mật khẩu
  *     description: Yêu cầu đặt lại mật khẩu.
@@ -142,7 +140,7 @@ router.post('/forgot-password', Login_registerController.forgotPassword);
 
 /**
  * @swagger
- * /reset-password:
+ * /api/reset-password:
  *   post:
  *     summary: Đặt lại mật khẩu
  *     description: Đặt lại mật khẩu của người dùng bằng token đặt lại mật khẩu.
@@ -156,7 +154,7 @@ router.post('/forgot-password', Login_registerController.forgotPassword);
 router.post('/reset-password', AuthMiddleware.verifyResetToken, Login_registerController.resetPassword);
 /**
  * @swagger
- * /authenticate-user:
+ * /api/authenticate-user:
  *   post:
  *     summary: Xác thực người dùng
  *     description: Xác thực người dùng bằng token đặt lại mật khẩu.
@@ -170,7 +168,7 @@ router.post('/reset-password', AuthMiddleware.verifyResetToken, Login_registerCo
 router.post('/authenticate-user', AuthMiddleware.verifyResetToken, Login_registerController.authenticateUser);
 /**
  * @swagger
- * /refresh-token:
+ * /api/refresh-token:
  *   post:
  *     summary: Làm mới token truy cập
  *     description: Cấp token truy cập mới bằng token làm mới.
@@ -184,7 +182,7 @@ router.post('/authenticate-user', AuthMiddleware.verifyResetToken, Login_registe
 router.post('/refresh-token', AuthMiddleware.refreshAccessToken);
 /**
  * @swagger
- * /get-token:
+ * /api/get-token:
  *   get:
  *     summary: Lấy token truy cập
  *     description: Lấy token truy cập từ cookie.
@@ -205,7 +203,7 @@ router.get('/get-token', (req, res) => {
 });
 /**
  * @swagger
- * /get-refreshtoken:
+ * /api/get-refreshtoken:
  *   get:
  *     summary: Lấy token làm mới
  *     description: Lấy token làm mới từ cookie.
