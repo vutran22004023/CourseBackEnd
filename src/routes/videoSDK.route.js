@@ -1,6 +1,6 @@
 import express from 'express';
-import { AuthMiddleware } from '../middlewares/index.js';
-import VideoSDKController from '../controllers/videosdk.controller.js'
+import { AuthMiddleware, CacheMiddleware } from '../middlewares/index.js';
+import VideoSDKController from '../controllers/videosdk.controller.js';
 const router = express.Router();
 
 /**
@@ -138,7 +138,7 @@ const router = express.Router();
  *                   type: string
  *                   description: Thông điệp lỗi
  */
-router.post('/create-room',AuthMiddleware.authUser, VideoSDKController.createRoomZoom);
+router.post('/create-room', AuthMiddleware.authUser, VideoSDKController.createRoomZoom);
 /**
  * @swagger
  * /api/videosdk/show-user-teacher-zoom/{userIdZoom}:
@@ -214,7 +214,12 @@ router.post('/create-room',AuthMiddleware.authUser, VideoSDKController.createRoo
  *                   type: string
  *                   description: Thông điệp lỗi
  */
-router.get('/show-user-teacher-zoom/:userIdZoom',AuthMiddleware.authUser, VideoSDKController.showUserTeacherZoom);
+router.get(
+  '/show-user-teacher-zoom/:userIdZoom',
+  AuthMiddleware.authUser,
+  CacheMiddleware.getCache,
+  VideoSDKController.showUserTeacherZoom
+);
 /**
  * @swagger
  * /api/videosdk/show-user-student-zoom/{userIdZoom}:
@@ -278,5 +283,221 @@ router.get('/show-user-teacher-zoom/:userIdZoom',AuthMiddleware.authUser, VideoS
  *                   type: string
  *                   description: Thông điệp lỗi
  */
-router.get('/show-user-student-zoom/:userIdZoom',AuthMiddleware.authUser, VideoSDKController.showUserStudentZoom);
+router.get(
+  '/show-user-student-zoom/:userIdZoom',
+  AuthMiddleware.authUser,
+  CacheMiddleware.getCache,
+  VideoSDKController.showUserStudentZoom
+);
+/**
+ * @swagger
+ * /api/videosdk/show-user-student-zoom/{userIdZoom}:
+ *   get:
+ *     summary: Lấy thông tin người dùng sinh viên trong phòng Zoom
+ *     tags: [VideoSDK]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userIdZoom
+ *         required: true
+ *         description: ID của người dùng sinh viên trong phòng Zoom
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Thông tin người dùng sinh viên trong phòng Zoom
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: string
+ *                       description: ID của người dùng
+ *                     name:
+ *                       type: string
+ *                       description: Tên của người dùng
+ *                     email:
+ *                       type: string
+ *                       description: Địa chỉ email của người dùng
+ *                     zoomRoomId:
+ *                       type: string
+ *                       description: ID của phòng Zoom mà người dùng đang tham gia
+ *       404:
+ *         description: Không tìm thấy người dùng sinh viên trong phòng Zoom
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp lỗi
+ *       500:
+ *         description: Lỗi máy chủ nội bộ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp lỗi
+ */
+router.get(
+  '/show-details-zoom/:idRoom',
+  AuthMiddleware.authUser,
+  CacheMiddleware.getCache,
+  VideoSDKController.showDetailZoom
+);
+/**
+ * @swagger
+ * /api/videosdk/update-zoom/{id}:
+ *   put:
+ *     summary: Cập nhật thông tin phòng Zoom
+ *     tags: [VideoSDK]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của phòng Zoom cần cập nhật
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Tiêu đề của phòng Zoom
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Thời gian bắt đầu phòng Zoom
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Thời gian kết thúc phòng Zoom
+ *               permissions:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Danh sách ID sinh viên được phép tham gia
+ *     responses:
+ *       200:
+ *         description: Phòng Zoom đã được cập nhật thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp thành công
+ *       404:
+ *         description: Không tìm thấy phòng Zoom
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp lỗi
+ *       500:
+ *         description: Lỗi máy chủ nội bộ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp lỗi
+ */
+router.put('/update-zoom/:id', AuthMiddleware.authUser, VideoSDKController.updateRoom);
+/**
+ * @swagger
+ * /api/videosdk/delete-zoom/{id}:
+ *   delete:
+ *     summary: Xóa phòng Zoom
+ *     tags: [VideoSDK]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của phòng Zoom cần xóa
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Phòng Zoom đã được xóa thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp thành công
+ *       404:
+ *         description: Không tìm thấy phòng Zoom
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp lỗi
+ *       500:
+ *         description: Lỗi máy chủ nội bộ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   description: Mã trạng thái phản hồi
+ *                 message:
+ *                   type: string
+ *                   description: Thông điệp lỗi
+ */
+router.delete('/delete-zoom/:id', AuthMiddleware.authUser, VideoSDKController.deleteRoom);
 export default router;

@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
 const RoomDetailsSchema = new mongoose.Schema({
+  roomId: {
+    type: String,
+    required: true,
+  },
   apiKey: {
     type: String,
     required: true,
