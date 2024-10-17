@@ -39,7 +39,6 @@ class CacheMiddleware {
     async clearCache(key) {
       try {
         await redisClient.del(key); // Xóa cache theo key
-        console.log(`Cache cleared for key: ${key}`);
       } catch (error) {
         console.log('Cache clear error:', error);
       }

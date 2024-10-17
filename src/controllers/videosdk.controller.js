@@ -4,6 +4,7 @@ dotenv.config();
 import jwt from 'jsonwebtoken';
 import { Zoom } from '../models/zoom.model.js';
 import { UserModel } from '../models/index.js';
+import { CacheMiddleware } from '../middlewares/index.js';
 
 const API_KEY = process.env.VIDEOSDK_API_KEY;
 const SECRET = process.env.VIDEOSDK_SECRET_KEY;
@@ -36,6 +37,30 @@ const createRoomVideoSDK = async (createToken) => {
       }
     );
     return axiosResponse.data;
+  } catch (error) {
+    console.error('Error creating meeting:', error);
+    const errorResponse = {
+      status: 200,
+      message: 'Internal Server Error',
+      error: error.message || 'An unexpected error occurred.',
+    };
+    throw new Error(JSON.stringify(errorResponse));
+  }
+};
+
+const DeactivateRoomVideoSDK = async (token, roomId) => {
+  try {
+    const axiosResponse = await axios.post(
+      `${URL}/rooms/deactivate`,
+      { roomId: roomId }, // body của request
+      {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return axiosResponse;
   } catch (error) {
     console.error('Error creating meeting:', error);
     const errorResponse = {
@@ -83,6 +108,14 @@ class VideoSDKController {
 
       await newZoom.save();
 
+      await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${newZoom._id}`);
+      await Promise.all(
+        newZoom.permissions.map(async (permissionId) => {
+          const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
+          await CacheMiddleware.clearCache(cacheKey);
+        })
+      );
+      await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${userIdZoom}`);
       return res.status(200).json({
         status: 200,
         message: 'Room created and saved successfully',
@@ -97,6 +130,7 @@ class VideoSDKController {
   }
   async showUserTeacherZoom(req, res) {
     try {
+      const cacheKey = req.originalUrl;
       const { userIdZoom } = req.params;
       const rooms = await Zoom.find({ userIdZoom }).select('-token -roomDetails');
       if (rooms.length === 0) {
@@ -128,7 +162,18 @@ class VideoSDKController {
         ...room.toObject(),
         permissions: studentData.filter((student) => room.permissions.includes(student._id.toString())),
       }));
-
+      await CacheMiddleware.setCache(cacheKey, {
+        status: 200,
+        message: 'Rooms retrieved successfully',
+        data: {
+          rooms: roomsWithStudents,
+          teacher: {
+            id: userTeacher._id,
+            name: userTeacher.name,
+            avatar: userTeacher.avatar,
+          },
+        },
+      });
       return res.status(200).json({
         status: 200,
         message: 'Rooms retrieved successfully',
@@ -153,7 +198,7 @@ class VideoSDKController {
   async showUserStudentZoom(req, res) {
     try {
       const { userIdZoom } = req.params;
-
+      const cacheKey = req.originalUrl;
       // Tìm kiếm các phòng Zoom mà sinh viên tham gia
       const rooms = await Zoom.find({ permissions: userIdZoom }).select('-token -roomDetails');
 
@@ -198,13 +243,142 @@ class VideoSDKController {
         permissions: studentData.filter((student) => room.permissions.includes(student._id.toString())),
         teacher: teacherData,
       }));
-
+      await CacheMiddleware.setCache(cacheKey, {
+        status: 200,
+        message: 'Rooms retrieved successfully',
+        data: {
+          rooms: roomsWithDetails,
+        },
+      });
       return res.status(200).json({
         status: 200,
         message: 'Rooms retrieved successfully',
         data: {
           rooms: roomsWithDetails,
         },
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        message: 'Internal Server Error',
+        error: err.message,
+      });
+    }
+  }
+
+  async showDetailZoom(req, res) {
+    try {
+      const cacheKey = req.originalUrl;
+      const { idRoom } = req.params;
+      const rooms = await Zoom.find({ _id: idRoom });
+      if (!rooms) {
+        return res.status(200).json({
+          status: 404,
+          message: 'No rooms found for this student.',
+        });
+      }
+      await CacheMiddleware.setCache(cacheKey, {
+        status: 200,
+        message: 'Rooms retrieved successfully',
+        data: rooms,
+      });
+      return res.status(200).json({
+        status: 200,
+        message: 'Rooms retrieved successfully',
+        data: rooms,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        message: 'Internal Server Error',
+        error: err.message,
+      });
+    }
+  }
+
+  async updateRoom(req, res) {
+    const { id } = req.params;
+    const { title, startTime, endTime, permissions, status } = req.body;
+    try {
+      const existingRoom = await Zoom.findById(id);
+      if (!existingRoom) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Room not found',
+        });
+      }
+
+      await DeactivateRoomVideoSDK(existingRoom?.token, existingRoom?.roomDetails?.roomId);
+      const createToken = createTokenVideoSDK(permissions);
+      if (!createToken) {
+        return res.status(200).json({
+          status: 400,
+          message: 'Error generating token',
+        });
+      }
+
+      const createIdZoom = await createRoomVideoSDK(createToken);
+
+      if (!createIdZoom) {
+        return res.status(200).json({
+          status: 400,
+          message: 'Error creating room, no roomId returned',
+        });
+      }
+      existingRoom.status = status || existingRoom.status;
+      existingRoom.roomDetails = createIdZoom || existingRoom.roomDetails;
+      existingRoom.token = createToken || existingRoom.token;
+      existingRoom.title = title || existingRoom.title;
+      existingRoom.startTime = startTime || existingRoom.startTime;
+      existingRoom.endTime = endTime || existingRoom.endTime;
+      existingRoom.permissions = permissions || existingRoom.permissions;
+
+      await existingRoom.save();
+
+      await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${id}`);
+      await Promise.all(
+        existingRoom?.permissions.map(async (permissionId) => {
+          const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
+          await CacheMiddleware.clearCache(cacheKey);
+        })
+      );
+      await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
+      return res.status(200).json({
+        status: 200,
+        message: 'Room updated successfully',
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        message: 'Internal Server Error',
+        error: err.message,
+      });
+    }
+  }
+
+  async deleteRoom(req, res) {
+    const { id } = req.params;
+    try {
+      const existingRoom = await Zoom.findById(id);
+      if (!existingRoom) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Room not found',
+        });
+      }
+      await DeactivateRoomVideoSDK(existingRoom?.token, existingRoom?.roomDetails?.roomId);
+      await Zoom.findByIdAndDelete(id);
+      await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${id}`);
+      await Promise.all(
+        existingRoom.permissions.map(async (permissionId) => {
+          const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
+          await CacheMiddleware.clearCache(cacheKey);
+        })
+      );
+      await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
+      return res.status(200).json({
+        status: 200,
+        message: 'Room deleted successfully',
       });
     } catch (err) {
       return res.status(500).json({
