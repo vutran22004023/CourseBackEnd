@@ -295,7 +295,7 @@ router.get(
  *   get:
  *     summary: Get Zoom room details
  *     description: Retrieves the details of a specific Zoom room using the room's ID.
- *     tags: [ZoomRoom]
+ *     tags: [VideoSDK]
  *     parameters:
  *       - in: path
  *         name: idRoom
