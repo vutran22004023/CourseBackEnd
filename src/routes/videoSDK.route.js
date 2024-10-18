@@ -291,7 +291,7 @@ router.get(
 );
 /**
  * @swagger
- * /show-details-zoom/{idRoom}:
+ * /api/videosdk/show-details-zoom/{idRoom}:
  *   get:
  *     summary: Get Zoom room details
  *     description: Retrieves the details of a specific Zoom room using the room's ID.
