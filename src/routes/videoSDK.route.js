@@ -291,22 +291,21 @@ router.get(
 );
 /**
  * @swagger
- * /api/videosdk/show-user-student-zoom/{userIdZoom}:
+ * /show-details-zoom/{idRoom}:
  *   get:
- *     summary: Lấy thông tin người dùng sinh viên trong phòng Zoom
- *     tags: [VideoSDK]
- *     security:
- *       - bearerAuth: []
+ *     summary: Get Zoom room details
+ *     description: Retrieves the details of a specific Zoom room using the room's ID.
+ *     tags: [ZoomRoom]
  *     parameters:
  *       - in: path
- *         name: userIdZoom
- *         required: true
- *         description: ID của người dùng sinh viên trong phòng Zoom
+ *         name: idRoom
  *         schema:
  *           type: string
+ *         required: true
+ *         description: The ID of the Zoom room to retrieve
  *     responses:
  *       200:
- *         description: Thông tin người dùng sinh viên trong phòng Zoom
+ *         description: Zoom room details retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -314,24 +313,16 @@ router.get(
  *               properties:
  *                 status:
  *                   type: integer
- *                   description: Mã trạng thái phản hồi
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Rooms retrieved successfully
  *                 data:
- *                   type: object
- *                   properties:
- *                     userId:
- *                       type: string
- *                       description: ID của người dùng
- *                     name:
- *                       type: string
- *                       description: Tên của người dùng
- *                     email:
- *                       type: string
- *                       description: Địa chỉ email của người dùng
- *                     zoomRoomId:
- *                       type: string
- *                       description: ID của phòng Zoom mà người dùng đang tham gia
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ZoomRoom'
  *       404:
- *         description: Không tìm thấy người dùng sinh viên trong phòng Zoom
+ *         description: No rooms found for this student
  *         content:
  *           application/json:
  *             schema:
@@ -339,12 +330,12 @@ router.get(
  *               properties:
  *                 status:
  *                   type: integer
- *                   description: Mã trạng thái phản hồi
+ *                   example: 404
  *                 message:
  *                   type: string
- *                   description: Thông điệp lỗi
+ *                   example: No rooms found for this student.
  *       500:
- *         description: Lỗi máy chủ nội bộ
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
@@ -352,10 +343,13 @@ router.get(
  *               properties:
  *                 status:
  *                   type: integer
- *                   description: Mã trạng thái phản hồi
+ *                   example: 500
  *                 message:
  *                   type: string
- *                   description: Thông điệp lỗi
+ *                   example: Internal Server Error
+ *                 error:
+ *                   type: string
+ *                   example: Error message
  */
 router.get(
   '/show-details-zoom/:idRoom',
