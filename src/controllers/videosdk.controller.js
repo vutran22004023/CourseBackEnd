@@ -10,14 +10,14 @@ const API_KEY = process.env.VIDEOSDK_API_KEY;
 const SECRET = process.env.VIDEOSDK_SECRET_KEY;
 const URL = process.env.VIDEOSDK_URL;
 
-const createTokenVideoSDK = (permissions) => {
+const createTokenVideoSDK = (permissions,userIdZoom) => {
   const options = {
     expiresIn: '120m',
     algorithm: 'HS256',
   };
   const payload = {
     apikey: API_KEY,
-    permissions: permissions, // `ask_join` || `allow_mod`
+    permissions: [...permissions, userIdZoom], // `ask_join` || `allow_mod`
     version: 2,
   };
   const token = jwt.sign(payload, SECRET, options);
@@ -78,7 +78,7 @@ class VideoSDKController {
     try {
       const { title, startTime, endTime, userIdZoom, permissions } = req.body;
 
-      const createToken = createTokenVideoSDK(permissions);
+      const createToken = createTokenVideoSDK(permissions,userIdZoom);
       if (!createToken) {
         return res.status(200).json({
           status: 400,
