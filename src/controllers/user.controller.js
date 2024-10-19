@@ -94,10 +94,10 @@ class UserController {
 
   async createUser(req, res) {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, role } = req.body;
       const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
       const isCheckEmail = mailformat.test(email);
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !role) {
         return res.status(200).json({
           status: 'ERR',
           message: 'Chưa điền đầy đủ thông tin',
