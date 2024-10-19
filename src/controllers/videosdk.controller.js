@@ -307,27 +307,9 @@ class VideoSDKController {
           message: 'Room not found',
         });
       }
-
-      await DeactivateRoomVideoSDK(existingRoom?.token, existingRoom?.roomDetails?.roomId);
-      const createToken = createTokenVideoSDK(permissions);
-      if (!createToken) {
-        return res.status(200).json({
-          status: 400,
-          message: 'Error generating token',
-        });
-      }
-
-      const createIdZoom = await createRoomVideoSDK(createToken);
-
-      if (!createIdZoom) {
-        return res.status(200).json({
-          status: 400,
-          message: 'Error creating room, no roomId returned',
-        });
-      }
       existingRoom.status = status || existingRoom.status;
-      existingRoom.roomDetails = createIdZoom || existingRoom.roomDetails;
-      existingRoom.token = createToken || existingRoom.token;
+      existingRoom.roomDetails = existingRoom.roomDetails;
+      existingRoom.token = existingRoom.token;
       existingRoom.title = title || existingRoom.title;
       existingRoom.startTime = startTime || existingRoom.startTime;
       existingRoom.endTime = endTime || existingRoom.endTime;
