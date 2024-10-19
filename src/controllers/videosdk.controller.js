@@ -241,13 +241,15 @@ class VideoSDKController {
         startTime: room.startTime,
         endTime: room.endTime,
         permissions: studentData.filter((student) => room.permissions.includes(student._id.toString())),
-        teacher: teacherData,
       }));
       await CacheMiddleware.setCache(cacheKey, {
         status: 200,
         message: 'Rooms retrieved successfully',
         data: {
           rooms: roomsWithDetails,
+          teacher: {
+            ...teacherData,
+          },
         },
       });
       return res.status(200).json({
