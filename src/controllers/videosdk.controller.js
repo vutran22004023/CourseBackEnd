@@ -10,7 +10,7 @@ const API_KEY = process.env.VIDEOSDK_API_KEY;
 const SECRET = process.env.VIDEOSDK_SECRET_KEY;
 const URL = process.env.VIDEOSDK_URL;
 
-const createTokenVideoSDK = (permissions,userIdZoom) => {
+const createTokenVideoSDK = (permissions, userIdZoom) => {
   const options = {
     expiresIn: '120m',
     algorithm: 'HS256',
@@ -78,7 +78,7 @@ class VideoSDKController {
     try {
       const { title, startTime, endTime, userIdZoom, permissions } = req.body;
 
-      const createToken = createTokenVideoSDK(permissions,userIdZoom);
+      const createToken = createTokenVideoSDK(permissions, userIdZoom);
       if (!createToken) {
         return res.status(200).json({
           status: 400,

@@ -80,7 +80,7 @@ class AuthController {
 
   async Register(req, res) {
     try {
-      const { name, email, password, confirmPassword,role } = req.body;
+      const { name, email, password, confirmPassword, role } = req.body;
       const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
       const isCheckEmail = mailformat.test(email);
       if (!name || !email || !password || !confirmPassword || role) {

@@ -53,7 +53,7 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Course'
  */
-router.get('/all-courses',CacheMiddleware.getCache, CourseController.index);
+router.get('/all-courses', CacheMiddleware.getCache, CourseController.index);
 
 /**
  * @swagger
@@ -79,7 +79,7 @@ router.get('/all-courses',CacheMiddleware.getCache, CourseController.index);
  *       404:
  *         description: Khóa học không tồn tại
  */
-router.get('/detail-courses/not-login/:slug',CacheMiddleware.getCache, CourseController.get);
+router.get('/detail-courses/not-login/:slug', CacheMiddleware.getCache, CourseController.get);
 
 /**
  * @swagger
@@ -107,7 +107,7 @@ router.get('/detail-courses/not-login/:slug',CacheMiddleware.getCache, CourseCon
  *       404:
  *         description: Khóa học không tồn tại
  */
-router.get('/detail-courses/:slug',passportMiddleware,CacheMiddleware.getCache, CourseController.get);
+router.get('/detail-courses/:slug', passportMiddleware, CacheMiddleware.getCache, CourseController.get);
 
 /**
  * @swagger

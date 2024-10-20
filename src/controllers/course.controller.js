@@ -2,7 +2,7 @@ import Course from '../models/course.model.js';
 import { CourseService } from '../services/index.js';
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
-import {CacheMiddleware} from '../middlewares/index.js'
+import { CacheMiddleware } from '../middlewares/index.js';
 dotenv.config();
 
 class CourseController {
@@ -67,13 +67,12 @@ class CourseController {
           status: 404,
           message: 'Không tìm thấy khóa học!',
         });
-      else
-        await CacheMiddleware.clearCache(`/api/course/detail-courses/${id}`);
-        await CacheMiddleware.clearCache(`/api/course/all-courses`);
-        res.status(200).json({
-          status: 200,
-          message: `Đã xóa khóa học id: ${result._id}`,
-        });
+      else await CacheMiddleware.clearCache(`/api/course/detail-courses/${id}`);
+      await CacheMiddleware.clearCache(`/api/course/all-courses`);
+      res.status(200).json({
+        status: 200,
+        message: `Đã xóa khóa học id: ${result._id}`,
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
