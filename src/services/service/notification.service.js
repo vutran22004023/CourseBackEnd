@@ -1,6 +1,5 @@
 import Notification from '../../models/notification.model.js';
 import admin from '../../configs/firebase_admin.config.js';
-import 'dotenv/config';
 
 class NotificationService {
   async send(data) {
@@ -13,6 +12,11 @@ class NotificationService {
           title: notification.title,
           body: notification.content,
           icon: notification.icon,
+        },
+        webpush: {
+          fcm_options: {
+            link: process.env.URL_CLIENT,
+          },
         },
       };
       await admin.messaging().send(message);
