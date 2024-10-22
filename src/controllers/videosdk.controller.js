@@ -4,7 +4,7 @@ dotenv.config();
 import jwt from 'jsonwebtoken';
 import { Zoom } from '../models/zoom.model.js';
 import { UserModel } from '../models/index.js';
-import { CacheMiddleware } from '../middlewares/index.js';
+import CacheUtility from '../utils/cache.util.js';
 
 const API_KEY = process.env.VIDEOSDK_API_KEY;
 const SECRET = process.env.VIDEOSDK_SECRET_KEY;
@@ -108,14 +108,14 @@ class VideoSDKController {
 
       await newZoom.save();
 
-      await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${newZoom._id}`);
+      await CacheUtility.clearCache(`/api/videosdk/show-details-zoom/${newZoom._id}`);
       await Promise.all(
         newZoom.permissions.map(async (permissionId) => {
           const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
-          await CacheMiddleware.clearCache(cacheKey);
+          await CacheUtility.clearCache(cacheKey);
         })
       );
-      await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${userIdZoom}`);
+      await CacheUtility.clearCache(`/api/videosdk/show-user-teacher-zoom/${userIdZoom}`);
       return res.status(200).json({
         status: 200,
         message: 'Room created and saved successfully',
@@ -162,7 +162,7 @@ class VideoSDKController {
         ...room.toObject(),
         permissions: studentData.filter((student) => room.permissions.includes(student._id.toString())),
       }));
-      await CacheMiddleware.setCache(cacheKey, {
+      await CacheUtility.setCache(cacheKey, {
         status: 200,
         message: 'Rooms retrieved successfully',
         data: {
@@ -242,7 +242,7 @@ class VideoSDKController {
         endTime: room.endTime,
         permissions: studentData.filter((student) => room.permissions.includes(student._id.toString())),
       }));
-      await CacheMiddleware.setCache(cacheKey, {
+      await CacheUtility.setCache(cacheKey, {
         status: 200,
         message: 'Rooms retrieved successfully',
         data: {
@@ -279,7 +279,7 @@ class VideoSDKController {
           message: 'No rooms found for this student.',
         });
       }
-      await CacheMiddleware.setCache(cacheKey, {
+      await CacheUtility.setCache(cacheKey, {
         status: 200,
         message: 'Rooms retrieved successfully',
         data: rooms,
@@ -319,14 +319,14 @@ class VideoSDKController {
 
       await existingRoom.save();
 
-      await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${id}`);
+      await CacheUtility.clearCache(`/api/videosdk/show-details-zoom/${id}`);
       await Promise.all(
         existingRoom?.permissions.map(async (permissionId) => {
           const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
-          await CacheMiddleware.clearCache(cacheKey);
+          await CacheUtility.clearCache(cacheKey);
         })
       );
-      await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
+      await CacheUtility.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
       return res.status(200).json({
         status: 200,
         message: 'Room updated successfully',
@@ -352,14 +352,14 @@ class VideoSDKController {
       }
       await DeactivateRoomVideoSDK(existingRoom?.token, existingRoom?.roomDetails?.roomId);
       await Zoom.findByIdAndDelete(id);
-      await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${id}`);
+      await CacheUtility.clearCache(`/api/videosdk/show-details-zoom/${id}`);
       await Promise.all(
         existingRoom.permissions.map(async (permissionId) => {
           const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
-          await CacheMiddleware.clearCache(cacheKey);
+          await CacheUtility.clearCache(cacheKey);
         })
       );
-      await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
+      await CacheUtility.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
       return res.status(200).json({
         status: 200,
         message: 'Room deleted successfully',
