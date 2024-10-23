@@ -7,6 +7,11 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Yêu cầu id của người dùng'],
     },
+    tournamentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tournament',
+      required: [true, 'Yêu cầu id của giải đấu'],
+    },
     nameAlgorithm: {
       type: String,
       required: [true, 'Tiêu đề không được để trống!'],

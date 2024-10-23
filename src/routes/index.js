@@ -10,6 +10,7 @@ import AlgorithmRouter from './algorithm.route.js';
 import NotificationRouter from './notification.route.js';
 import AnalyticsRouter from './analytic.route.js';
 import VideoSDKRouter from './videoSDK.route.js';
+import TournamentRouter from './tournament.route.js';
 const router = express.Router();
 
 router.use('/', Login_RegisterRouter);
@@ -21,6 +22,7 @@ router.use('/blog', BlogRouter);
 router.use('/message', MessageRouter);
 router.use('/algorithm', AlgorithmRouter);
 router.use('/notification', NotificationRouter);
-router.use('/analytics', AnalyticsRouter)
-router.use('/videosdk',VideoSDKRouter)
+router.use('/analytics', AnalyticsRouter);
+router.use('/videosdk', VideoSDKRouter);
+router.use('/tournament', TournamentRouter);
 export default router;

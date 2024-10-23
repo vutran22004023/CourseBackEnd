@@ -2,6 +2,7 @@ import CourseChat from '../models/message.model.js';
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 dotenv.config();
+import CacheUtility from '../utils/cache.util.js';
 
 class MessageController {
   async postMessage(req, res) {
@@ -34,12 +35,14 @@ class MessageController {
       await courseChat.save();
 
       res.status(201).json({ message: 'Message posted successfully.' });
+      CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while posting the message.' });
     }
   }
 
   async getMessages(req, res) {
+    const cacheKey = req.originalUrl;
     const { courseId, chapterId, videoId, page = 1, limit = 10 } = req.query;
 
     try {
@@ -80,13 +83,15 @@ class MessageController {
       }
 
       const messages = sortedMessages.slice(startIndex, endIndex);
-
-      res.status(200).json({
+      const result = {
         page: pageNumber,
         totalPages,
         totalMessages,
         messages,
-      });
+      };
+
+      res.status(200).json(result);
+      CacheUtility.setCache(cacheKey, result);
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while fetching messages.' });
     }
@@ -131,6 +136,7 @@ class MessageController {
       await courseChat.save();
 
       res.status(200).json({ message: 'Message updated successfully.' });
+      CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while updating the message.' });
     }
@@ -176,6 +182,7 @@ class MessageController {
       await courseChat.save();
 
       res.status(200).json({ message: 'Message deleted successfully.' });
+      CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while deleting the message.' });
     }

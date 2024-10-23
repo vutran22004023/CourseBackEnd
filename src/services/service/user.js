@@ -165,7 +165,7 @@ const createUser = async (user) => {
       name,
       email,
       password: hashedPassword,
-      role
+      role,
     });
     if (createdUser) {
       return {

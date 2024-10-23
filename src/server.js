@@ -59,12 +59,14 @@ const options = {
         },
       },
     },
-    security: [{
-      bearerAuth: []
-    }],
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ['./src/routes/*.js'],
-}
+  apis: ['./src/swagger/*.js'],
+};
 const openapiSpecification = swaggerJsdoc(options);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));

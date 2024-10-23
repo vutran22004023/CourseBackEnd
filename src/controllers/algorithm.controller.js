@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
-import evaluateAlgorithm from '../utils.js';
+import evaluateAlgorithm from '../utils/alg.util.js';
 import { TournamentModel } from '../models/index.js';
 const pythonScriptPath = path.resolve('python', 'generate_problem.py');
 const jsonFilePath = path.resolve('output.json');

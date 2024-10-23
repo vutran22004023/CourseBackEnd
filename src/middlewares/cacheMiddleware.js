@@ -1,4 +1,4 @@
-import redisClient from '../configs/redisClient.config.js';
+import CacheUtility from '../utils/cache.util.js';
 
 class CacheMiddleware {
   // Lấy dữ liệu từ cache
@@ -6,9 +6,10 @@ class CacheMiddleware {
     const key = req.originalUrl; // Sử dụng URL làm key cho cache
 
     try {
-      const cacheData = await redisClient.get(key); // Lấy dữ liệu từ Redis
+      const cacheData = await CacheUtility.getCache(key); // Lấy dữ liệu từ Redis
       if (cacheData) {
-        return res.status(200).json(JSON.parse(cacheData)); // Nếu có cache, trả về cache
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).send(cacheData); // Nếu có cache, trả về cache
       } else {
         next(); // Nếu không có, tiếp tục tới controller
       }
@@ -17,32 +18,6 @@ class CacheMiddleware {
       next(); // Nếu lỗi, tiếp tục tới controller
     }
   }
-
-  // Lưu dữ liệu vào cache
-  async setCache(key, data, expiration = 3600) { // expiration mặc định 1 giờ
-    try {
-      await redisClient.set(key, JSON.stringify(data), 'EX', expiration); // Lưu vào Redis với thời gian sống
-    } catch (error) {
-      console.log('Cache set error:', error);
-    }
-  }
-
-    // Cập nhật cache (có thể dùng tương tự setCache)
-    async updateCache(key, data, expiration = 3600) {
-      try {
-        await redisClient.set(key, JSON.stringify(data), 'EX', expiration); // Ghi đè cache với key tương ứng
-      } catch (error) {
-        console.log('Cache update error:', error);
-      }
-    }
-
-    async clearCache(key) {
-      try {
-        await redisClient.del(key); // Xóa cache theo key
-      } catch (error) {
-        console.log('Cache clear error:', error);
-      }
-    }
 }
 
 export default new CacheMiddleware();

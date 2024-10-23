@@ -122,40 +122,40 @@ class UserController {
   async getSearchUsers(req, res) {
     try {
       const { limit, page, sort, filter } = req.query;
-  
+
       const limitValue = parseInt(limit) || 30;
       const pageValue = parseInt(page) || 0;
-  
+
       const query = {};
       const options = {
         limit: limitValue,
         skip: pageValue * limitValue,
         sort: {},
       };
-  
+
       if (filter) {
         const filterArray = filter.split(':');
         query[filterArray[0]] = { $regex: filterArray[1], $options: 'i' }; // Tìm kiếm không phân biệt hoa thường
       }
-  
+
       if (sort) {
         const sortArray = sort.split(':');
         options.sort[sortArray[1]] = sortArray[0] === 'asc' ? 1 : -1; // Sắp xếp tăng dần hoặc giảm dần
       }
-  
+
       const totalUsers = await UserModel.countDocuments(query);
-  
+
       const allUsers = await UserModel.find(query, null, options)
         .select('-password') // Loại bỏ trường password
         .lean();
-  
+
       // Chọn trường cần thiết từ kết quả
-      const result = allUsers.map(user => ({
+      const result = allUsers.map((user) => ({
         _id: user._id,
         name: user.name,
         avatar: user.avatar,
       }));
-  
+
       // Trả về kết quả
       return res.status(200).json({
         status: 200,

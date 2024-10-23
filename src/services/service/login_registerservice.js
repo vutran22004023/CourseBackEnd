@@ -117,7 +117,7 @@ const LoginIn = async (user) => {
 
 const Register = async (user) => {
   try {
-    const { name, email, password,role } = user;
+    const { name, email, password, role } = user;
     const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
     const checkUser = await UserModel.findOne({
       email: email,
@@ -132,7 +132,7 @@ const Register = async (user) => {
       name,
       email,
       password: hashedPassword,
-      role
+      role,
     });
     if (createdUser) {
       const resetToken = await TokenMiddleware.generateAccessTokenResetPassword({
