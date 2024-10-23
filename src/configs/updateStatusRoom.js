@@ -20,12 +20,28 @@ async function updateCourseStatus() {
         room.status = 'in_progress';
         console.log(`Cập nhật phòng họp "${room.title}" thành in_progress`);
         await room.save();
+        await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${room._id}`);
+        await Promise.all(
+          room.permissions.map(async (permissionId) => {
+            const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
+            await CacheMiddleware.clearCache(cacheKey);
+          })
+        );
+        await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${room.userIdZoom}`);
       }
     } else if (now.isAfter(endTime)) {
       if (room.status !== 'completed') {
         room.status = 'completed';
         console.log(`Cập nhật phòng họp "${room.title}" thành completed`);
         await room.save();
+        await CacheMiddleware.clearCache(`/api/videosdk/show-details-zoom/${room._id}`);
+        await Promise.all(
+          room.permissions.map(async (permissionId) => {
+            const cacheKey = `/api/videosdk/show-user-student-zoom/${permissionId}`;
+            await CacheMiddleware.clearCache(cacheKey);
+          })
+        );
+        await CacheMiddleware.clearCache(`/api/videosdk/show-user-teacher-zoom/${room.userIdZoom}`);
       }
     }
   }
