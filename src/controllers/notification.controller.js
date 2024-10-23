@@ -6,6 +6,8 @@ class NotificationController {
     try {
       const result = await NotificationService.send(req.body);
       res.status(200).json(result);
+      CacheUtility.clearCache(`/api/notification/dashboard`);
+      CacheUtility.clearCache(`/api/notification/modal`);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -14,6 +16,7 @@ class NotificationController {
   // Get notifications - dashboard
   async index(req, res) {
     try {
+      const cacheKey = req.originalUrl;
       const { limit, page, sort, filter } = req.query;
       const limitValue = parseInt(limit) || 30;
       const pageValue = parseInt(page) || 0;
@@ -21,6 +24,7 @@ class NotificationController {
       const filterArray = filter ? filter.split(':') : null;
       const result = await NotificationService.get(limitValue, pageValue, sortArray, filterArray);
       res.status(200).json(result);
+      CacheUtility.setCache(cacheKey, result);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -29,12 +33,14 @@ class NotificationController {
   // Get notifications for modal
   async get(req, res) {
     try {
+      const cacheKey = req.originalUrl;
       const limitValue = 10;
       const pageValue = 0;
       const sortArray = ['desc', 'createdAt'];
       const filterArray = null;
       const result = await NotificationService.get(limitValue, pageValue, sortArray, filterArray);
       res.status(200).json(result);
+      CacheUtility.setCache(cacheKey, result);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -45,6 +51,8 @@ class NotificationController {
     try {
       const result = await NotificationService.delete(req.params.id);
       res.status(200).json(result);
+      CacheUtility.clearCache(`/api/notification/dashboard`);
+      CacheUtility.clearCache(`/api/notification/modal`);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -55,6 +63,8 @@ class NotificationController {
     try {
       const result = await NotificationService.deleteAll();
       res.status(200).json(result);
+      CacheUtility.clearCache(`/api/notification/dashboard`);
+      CacheUtility.clearCache(`/api/notification/modal`);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
