@@ -7,9 +7,9 @@ import cookieParser from 'cookie-parser';
 import passport from './configs/passport.config.js';
 import os from 'os';
 import redisClient from './configs/redisClient.config.js';
-import swaggerUi from 'swagger-ui-express'
-import swaggerJsdoc from 'swagger-jsdoc'
-import UpdateCourseStatus from './configs/updateStatusRoom.js'
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import UpdateCourseStatus from './configs/updateStatusRoom.js';
 const app = express();
 
 // Get local IP address function
