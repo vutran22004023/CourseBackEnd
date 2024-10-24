@@ -399,48 +399,6 @@ class UserCourseService {
       };
     }
   }
-
-  validator(err) {
-    if (err.name === 'ValidationError') {
-      const field = Object.keys(err.errors)[0];
-      const error = err.errors[field];
-      return {
-        status: 'ERR',
-        message: error.message,
-      };
-    } else throw err;
-  }
-
-  // async dataHandle(data) {
-  //   // Trim data
-  //   Object.keys(data).forEach((key) => {
-  //     if (typeof data[key] === 'string') {
-  //       data[key] = data[key].trim();
-  //     }
-  //   });
-
-  //   for (const chapter of data.chapters) {
-  //     for (const video of chapter.videos) {
-  //       Object.keys(video).forEach((key) => {
-  //         if (typeof video[key] === 'string') {
-  //           video[key] = video[key].trim();
-  //         }
-  //       });
-  //     }
-  //   }
-
-  //   // if (emptySlug)
-  //   //   return {
-  //   //     status: 'ERR',
-  //   //     message: 'Thiếu slug video',
-  //   //   };
-  //   // else if (hasDuplicate)
-  //   //   return {
-  //   //     status: 'ERR',
-  //   //     message: 'Slug video trong các chương bị trùng lặp',
-  //   //   };
-  //   // else return 0;
-  // }
 }
 
 export default new UserCourseService();
