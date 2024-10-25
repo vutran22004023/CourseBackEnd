@@ -60,6 +60,16 @@ const userCourseSchema = new mongoose.Schema(
       required: true,
     },
     chapters: [chapterStatusSchema],
+    rating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      default: 0,
+    },
+    statusRating: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,

@@ -10,5 +10,6 @@ router.get('/course-progress', AuthMiddleware.authUser, UserCourseController.get
 router.put('/update-note', AuthMiddleware.authUser, UserCourseController.updateNote);
 router.post('/create-note', AuthMiddleware.authUser, UserCourseController.createNote);
 router.post('/all-note', AuthMiddleware.authUser, UserCourseController.getAllNotes);
+router.put('/update-rating', AuthMiddleware.authUser, UserCourseController.updateRating);
 
 export default router;

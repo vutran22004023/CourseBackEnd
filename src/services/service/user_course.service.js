@@ -399,6 +399,52 @@ class UserCourseService {
       };
     }
   }
+
+  async updateRating(data) {
+    try {
+      const { userId, courseId, rating } = data;
+  
+      // Validate the rating input to ensure it's between 0 and 5
+      if (rating < 0 || rating > 5) {
+        return {
+          status: 'ERR',
+          message: 'Rating must be between 0 and 5',
+        };
+      }
+  
+      const userCourse = await UserCourse.findOneAndUpdate(
+        { userId, courseId },
+        {
+          $set: {
+            rating: rating,
+            statusRating: true,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+  
+      if (!userCourse) {
+        return {
+          status: 'ERR',
+          message: 'Course not found',
+        };
+      }
+  
+      return {
+        status: 200,
+        message: 'Rating updated successfully!',
+        data: userCourse,
+      };
+    } catch (err) {
+      return {
+        status: 'ERR',
+        message: 'An error occurred',
+        error: err.message,
+      };
+    }
+  }
 }
 
 export default new UserCourseService();
