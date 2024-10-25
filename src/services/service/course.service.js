@@ -5,6 +5,7 @@ import 'dotenv/config';
 import moment from 'moment';
 import 'moment-duration-format';
 import PayCourse from '../../models/paycourse.model.js';
+import { UserCourse } from '../../models/user_course.model.js';
 
 class CourseService {
   async getAllCourses(limit, page, sort, filter) {
@@ -22,11 +23,35 @@ class CourseService {
     }
 
     const allCourses = await CourseModel.find(query, null, options).select('-chapters').lean();
+    const courseIds = allCourses.map((course) => course._id);
+    const ratingData = await UserCourse.aggregate([
+      { $match: { courseId: { $in: courseIds } } },
+      {
+        $group: {
+          _id: '$courseId',
+          averageRating: { $avg: '$rating' }, 
+          ratingCount: { $sum: 1 },
+        },
+      },
+    ]);
 
+    const ratingMap = ratingData.reduce((acc, rating) => {
+      acc[rating._id.toString()] = {
+        averageRating: rating.averageRating,
+        ratingCount: rating.ratingCount,
+      };
+      return acc;
+    }, {});
+
+    const coursesWithRating = allCourses.map((course) => ({
+      ...course,
+      rating: ratingMap[course._id.toString()]?.averageRating || 0,
+      ratingCount: ratingMap[course._id.toString()]?.ratingCount || 0,
+    }));
     return {
       status: 200,
       message: 'Xem tất cả khóa học',
-      data: allCourses,
+      data: coursesWithRating,
       total: totalCourses,
       pageCurrent: Number(page),
       totalPage: Math.ceil(totalCourses / limit),
