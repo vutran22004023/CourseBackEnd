@@ -1,6 +1,53 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
+
+// Define schema for multiple-choice questions
+const questionSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, 'Câu hỏi không có tiêu đề'],
+  },
+  options: {
+    type: [
+      {
+        label: {
+          type: String,
+          required: [true, 'Chưa có nhãn cho đáp án'],
+        },
+        text: {
+          type: String,
+          required: [true, 'Chưa có nội dung cho đáp án'],
+        },
+      },
+    ],
+    validate: [
+      {
+        validator: function (arr) {
+          return arr.length >= 2; // Ensure at least two answer options
+        },
+        message: 'Phải có ít nhất hai đáp án',
+      },
+      {
+        validator: function (arr) {
+          const labels = arr.map((option) => option.label);
+          return labels.length === new Set(labels).size;
+        },
+        message: 'Các nhãn đáp án phải là duy nhất',
+      },
+    ],
+  },
+  correctAnswer: {
+    type: String,
+    required: [true, 'Chưa có câu trả lời đúng'],
+    validate: {
+      validator: function (value) {
+        return this.options.some((option) => option.label === value);
+      },
+      message: 'Câu trả lời đúng phải khớp với một trong các nhãn đáp án',
+    },
+  },
+});
 const videoSchema = new mongoose.Schema(
   {
     childname: {
@@ -8,9 +55,34 @@ const videoSchema = new mongoose.Schema(
       maxLength: [255, 'Tiêu đề video quá dài'],
       required: [true, 'Chưa có tiêu đề video'],
     },
+    videoType: {
+      type: String,
+      required: true,
+      enum: ['video', 'exercise'],
+    },
     video: {
       type: String,
-      required: [true, 'Chưa có đường dẫn video'],
+      required: [
+        function () {
+          return this.videoType === 'video';
+        },
+        'Chưa có đường dẫn video',
+      ],
+      default: null,
+    },
+    file: {
+      type: String,
+      default: null,
+    },
+    quiz: {
+      type: [questionSchema],
+      // validate: {
+      //   validator: function (value) {
+      //     return this.videoType !== 'exercise' || (value && value.length > 0);
+      //   },
+      //   message: 'Chưa có bài tập trắc nghiệm',
+      // },
+      default: [],
     },
     time: {
       type: String,
