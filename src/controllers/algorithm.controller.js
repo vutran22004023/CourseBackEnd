@@ -51,7 +51,7 @@ class AlgorithmController {
   }
 
   async checkAlgorithms(req, res) {
-    const { ten, solution, userId } = req.body;
+    const { ten, solution, userId, tournamentId } = req.body;
 
     try {
       // Đọc lại dữ liệu từ tệp JSON để đảm bảo là dữ liệu mới nhất
@@ -69,6 +69,7 @@ class AlgorithmController {
 
       await TournamentModel.create({
         userId: userId,
+        tournamentId: tournamentId,
         nameAlgorithm: algorithm.ten,
         solution: solution,
         result: userResult,
