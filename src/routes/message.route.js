@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/postMessage', AuthMiddleware.authUser, MessageController.postMessage);
 router.get('/getMessages', AuthMiddleware.authUser, MessageController.getMessages);
+router.get('/get-messages-course', AuthMiddleware.authUser, MessageController.getMessagesCourseId);
 router.put(
   '/updateMessage/:courseId/:chapterId/:videoId/:messageId',
   AuthMiddleware.authUser,

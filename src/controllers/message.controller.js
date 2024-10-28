@@ -96,6 +96,61 @@ class MessageController {
       res.status(500).json({ error: 'An error occurred while fetching messages.' });
     }
   }
+  async getMessagesCourseId(req, res) {
+    const cacheKey = req.originalUrl;
+    const { courseId, page = 1, limit = 10 } = req.query;
+
+    try {
+      const pageNumber = parseInt(page, 10);
+      const pageSize = parseInt(limit, 10);
+
+      if (isNaN(pageNumber) || isNaN(pageSize) || pageNumber < 1 || pageSize < 1) {
+        return res.status(400).json({ error: 'Invalid page or limit value.' });
+      }
+
+      const courseChat = await CourseChat.findOne({ courseId });
+
+      if (!courseChat) {
+        return res.status(404).json({ error: 'Course not found' });
+      }
+
+      // Collect all messages from every chapter and video in the course
+      const allMessages = courseChat.chapters.flatMap((chapter) =>
+        chapter.videos.flatMap((video) =>
+          video.messages.map((message) => ({
+            ...message.toObject(),  // Convert message to plain object if it's a Mongoose document
+            chapterId: chapter.chapterId,
+            videoId: video.videoId,
+          }))
+        )
+      );
+
+    // Sort messages by timestamp in descending order
+    const sortedMessages = allMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    const totalMessages = sortedMessages.length;
+    const totalPages = Math.ceil(totalMessages / pageSize);
+    const startIndex = (pageNumber - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    if (startIndex >= totalMessages) {
+      return res.status(404).json({ error: 'Page not found' });
+    }
+
+    const messages = sortedMessages.slice(startIndex, endIndex);
+    const result = {
+      page: pageNumber,
+      totalPages,
+      totalMessages,
+      messages,
+    };
+
+      res.status(200).json(result);
+      CacheUtility.setCache(cacheKey, result);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while fetching messages.' });
+    }
+  }
 
   async updateMessage(req, res) {
     const { courseId, chapterId, videoId, messageId } = req.params;
