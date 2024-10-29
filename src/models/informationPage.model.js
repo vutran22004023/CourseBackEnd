@@ -9,6 +9,13 @@ const RouteSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      default: "",
+    },
     description: {
       type: String,
       required: true,
