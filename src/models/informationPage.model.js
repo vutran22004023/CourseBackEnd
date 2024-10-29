@@ -26,6 +26,9 @@ const InformationPageSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    description:{
+      type: String,
+    },
     paths: {
       type: [RouteSchema], 
       required: true,
