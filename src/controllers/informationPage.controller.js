@@ -26,7 +26,7 @@ class InformationPageController {
         { name, description, paths },
         { upsert: true, new: true }
       );
-      CacheUtility.clearCache(`/api/information-page/`);
+      CacheUtility.clearCache(`/api/information-page`);
       return res.json(updatedInformationPage);
     } catch (error) {
       return res.status(500).json({ message: error.message });
