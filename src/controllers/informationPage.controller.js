@@ -1,5 +1,5 @@
 import { InformationPageModel } from '../models/index.js';
-import CacheUtility from '../utils/cache.util.js'
+import CacheUtility from '../utils/cache.util.js';
 class InformationPageController {
   // Lấy thông tin của InformationPage
   async get(req, res) {
@@ -7,7 +7,7 @@ class InformationPageController {
       const cacheKey = req.originalUrl;
       const informationPage = await InformationPageModel.findOne({});
       if (!informationPage) {
-        return res.status(404).json({ message: "Information page not found" });
+        return res.status(404).json({ message: 'Information page not found' });
       }
       CacheUtility.setCache(cacheKey, informationPage);
       return res.status(200).json(informationPage);
@@ -19,11 +19,11 @@ class InformationPageController {
   // Cập nhật thông tin của InformationPage
   async put(req, res) {
     try {
-      const { name, paths } = req.body;
+      const { name, description, paths } = req.body;
 
       const updatedInformationPage = await InformationPageModel.findOneAndUpdate(
         {},
-        { name, paths },
+        { name, description, paths },
         { upsert: true, new: true }
       );
       CacheUtility.clearCache(`/api/information-page/`);
