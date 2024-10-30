@@ -15,10 +15,7 @@ class BlogService {
     if (sort) {
       options.sort = { [sort[1]]: sort[0] };
     }
-    if (!isAdmin) {
-      query.isConfirmed = true;
-    }
-    const allPosts = await Post.find(query, null, options).populate('userId', 'name avatar isAdmin').lean();
+    const allPosts = await Post.find(query, null, options).lean();
 
     return {
       status: 200,
