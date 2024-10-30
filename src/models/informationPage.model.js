@@ -40,6 +40,12 @@ const InformationPageSchema = new mongoose.Schema(
       type: [RouteSchema], 
       required: true,
     },
+    logo: {
+      type: String
+    },
+    logoSmall: {
+      type: String
+    }
   },
   {
     timestamps: true,
