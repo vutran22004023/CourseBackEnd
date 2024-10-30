@@ -19,11 +19,11 @@ class InformationPageController {
   // Cập nhật thông tin của InformationPage
   async put(req, res) {
     try {
-      const { name, description, paths } = req.body;
+      const { name, description, paths, logo, logoSmall } = req.body;
 
       const updatedInformationPage = await InformationPageModel.findOneAndUpdate(
         {},
-        { name, description, paths },
+        { name, description, paths, logo, logoSmall },
         { upsert: true, new: true }
       );
       CacheUtility.clearCache(`/api/information-page`);
