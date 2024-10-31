@@ -163,6 +163,9 @@ class CourseService {
                 dbVideo.video = reqVideo.video;
                 dbVideo.time = reqVideo.time;
                 dbVideo.slug = reqVideo.slug;
+                dbVideo.videoType = reqVideo.videoType;  // Adding videoType
+                dbVideo.file = reqVideo.file;            // Adding file
+                dbVideo.quiz = reqVideo.quiz || [];    
               }
             }
           });
@@ -178,6 +181,7 @@ class CourseService {
       course.price = reqData.price;
       course.priceAmount = reqData.priceAmount;
       course.image = reqData.image;
+      course.chapters = reqData.chapters;
       course.slug = reqData.slug;
       course.totalVideos = reqData.totalVideos;
       course.totalTime = reqData.totalTime;

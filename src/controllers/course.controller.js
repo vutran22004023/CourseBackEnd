@@ -92,6 +92,7 @@ class CourseController {
       }
 
       const result = await CourseService.updateCourse(id, req.body);
+      CacheUtility.clearCache(`/api/course/all-courses`);
       CacheUtility.updateCache(`/api/course/detail-courses/${id}`, result);
       res.status(200).json(result);
     } catch (error) {
