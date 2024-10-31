@@ -1,6 +1,14 @@
 import redisClient from '../configs/redisClient.config.js';
 
 class CacheUtility {
+  // Lấy dữ liệu từ cache
+  async getCache(key) {
+    try {
+      return await redisClient.get(key); // Lấy dữ liệu từ Redis
+    } catch (error) {
+      console.log('Cache error:', error);
+    }
+  }
 
   // Lưu dữ liệu vào cache
   async setCache(key, data, expiration = 3600) {
