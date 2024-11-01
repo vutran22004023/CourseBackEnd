@@ -81,6 +81,15 @@ class UserCourseController {
       res.status(500).json({ message: error.message });
     }
   }
+
+  async checkAnswers(req, res) {
+    try {
+      const result = await UserCourseService.checkAnswers(req.body);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 }
 
 export default new UserCourseController();

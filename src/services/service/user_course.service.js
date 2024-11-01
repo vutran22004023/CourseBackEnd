@@ -407,22 +407,22 @@ class UserCourseService {
         { userId, courseId },
         {
           $pull: {
-            'chapters.$[].videos.$[video].notes': { _id: noteId } // Remove the note with the specified _id
-          }
+            'chapters.$[].videos.$[video].notes': { _id: noteId }, // Remove the note with the specified _id
+          },
         },
         {
           new: true,
           arrayFilters: [{ 'video.videoId': videoId }],
         }
       );
-  
+
       if (!userCourse) {
         return {
           status: 'ERR',
           message: 'Khóa học không tồn tại',
         };
       }
-  
+
       return {
         status: 200,
         message: 'Xóa ghi chú thành công!',
@@ -440,7 +440,7 @@ class UserCourseService {
   async updateRating(data) {
     try {
       const { userId, courseId, rating } = data;
-  
+
       // Validate the rating input to ensure it's between 0 and 5
       if (rating < 0 || rating > 5) {
         return {
@@ -448,7 +448,7 @@ class UserCourseService {
           message: 'Rating must be between 0 and 5',
         };
       }
-  
+
       const userCourse = await UserCourse.findOneAndUpdate(
         { userId, courseId },
         {
@@ -461,14 +461,14 @@ class UserCourseService {
           new: true,
         }
       );
-  
+
       if (!userCourse) {
         return {
           status: 'ERR',
           message: 'Course not found',
         };
       }
-  
+
       return {
         status: 200,
         message: 'Rating updated successfully!',
@@ -480,6 +480,56 @@ class UserCourseService {
         message: 'An error occurred',
         error: err.message,
       };
+    }
+  }
+
+  async checkAnswers(data) {
+    const { courseId, chapterId, videoId, quizAnswers } = data;
+    if (!quizAnswers || !Array.isArray(quizAnswers)) {
+      return { status: 400, message: 'Invalid input' };
+    }
+    try {
+      const course = await CourseModel.findById({
+        _id: courseId,
+        'chapters._id': chapterId,
+        'chapters.videos._id': videoId,
+      });
+      if (!course) {
+        return { status: 404, message: 'Course not found' };
+      }
+      const chapter = course.chapters[0];
+      const video = chapter.videos.find((v) => v._id.toString() === videoId);
+      if (!video) return { status: 404, message: 'Video not found' };
+
+      let results = quizAnswers.map((qa) => {
+        const quiz = video.quiz.find((q) => q._id.toString() === qa.id);
+        if (!quiz) return { id: qa.id, correct: null };
+
+        const isCorrect = qa.answer === quiz.correctAnswer;
+        return { id: qa.id, correct: isCorrect };
+      });
+      const totalQuestions = results.length;
+      const incorrectAnswers = results.filter((r) => r.correct === false).length;
+      if (incorrectAnswers === 0) {
+        return {
+          status: 'success',
+          message: 'Bài kiểm tra hoàn thành thành công!',
+          totalQuestions,
+          incorrectAnswers: 0,
+          results: results,
+        };
+      } else {
+        return {
+          status: 'fail',
+          message: 'Bài kiểm tra chưa hoàn thành. Vui lòng kiểm tra lại các câu sai.',
+          totalQuestions,
+          incorrectAnswers,
+          results: results,
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      return { status: 500, message: 'Internal server error' };
     }
   }
 }
