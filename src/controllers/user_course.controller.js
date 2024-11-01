@@ -62,6 +62,16 @@ class UserCourseController {
     }
   }
 
+  async deleteNotes(req, res) {
+    try {
+      const data = { userId: req.user.id, ...req.body };
+      const result = await UserCourseService.deleteNote(data);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async updateRating(req, res) {
     try {
       const data = { userId: req.user.id, ...req.body };

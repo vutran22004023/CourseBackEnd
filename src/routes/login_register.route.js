@@ -10,6 +10,7 @@ router.post('/register', Login_registerController.Register);
 router.post('/login-out', Login_registerController.logout);
 router.post('/forgot-password', Login_registerController.forgotPassword);
 router.post('/reset-password', AuthMiddleware.verifyResetToken, Login_registerController.resetPassword);
+router.post('/reset-password-user', AuthMiddleware.authUser, Login_registerController.resetPassword);
 router.post('/authenticate-user', AuthMiddleware.verifyResetToken, Login_registerController.authenticateUser);
 router.post('/refresh-token', AuthMiddleware.refreshAccessToken);
 router.get('/get-token', (req, res) => {

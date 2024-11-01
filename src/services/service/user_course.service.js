@@ -400,6 +400,43 @@ class UserCourseService {
     }
   }
 
+  async deleteNote(data) {
+    try {
+      const { userId, courseId, videoId, noteId } = data;
+      const userCourse = await UserCourse.findOneAndUpdate(
+        { userId, courseId },
+        {
+          $pull: {
+            'chapters.$[].videos.$[video].notes': { _id: noteId } // Remove the note with the specified _id
+          }
+        },
+        {
+          new: true,
+          arrayFilters: [{ 'video.videoId': videoId }],
+        }
+      );
+  
+      if (!userCourse) {
+        return {
+          status: 'ERR',
+          message: 'Khóa học không tồn tại',
+        };
+      }
+  
+      return {
+        status: 200,
+        message: 'Xóa ghi chú thành công!',
+        data: userCourse,
+      };
+    } catch (err) {
+      return {
+        status: 'ERR',
+        message: 'Đã xảy ra lỗi',
+        error: err.message,
+      };
+    }
+  }
+
   async updateRating(data) {
     try {
       const { userId, courseId, rating } = data;
