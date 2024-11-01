@@ -8,6 +8,7 @@ router.post('/start-course', AuthMiddleware.authUser, UserCourseController.start
 router.post('/update-progress', AuthMiddleware.authUser, UserCourseController.updateProgress);
 router.get('/course-progress', AuthMiddleware.authUser, UserCourseController.getCourseProgress);
 router.put('/update-note', AuthMiddleware.authUser, UserCourseController.updateNote);
+router.delete('/delete-note', AuthMiddleware.authUser, UserCourseController.deleteNotes);
 router.post('/create-note', AuthMiddleware.authUser, UserCourseController.createNote);
 router.post('/all-note', AuthMiddleware.authUser, UserCourseController.getAllNotes);
 router.put('/update-rating', AuthMiddleware.authUser, UserCourseController.updateRating);
