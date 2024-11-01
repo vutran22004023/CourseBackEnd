@@ -12,5 +12,6 @@ router.delete('/delete-note', AuthMiddleware.authUser, UserCourseController.dele
 router.post('/create-note', AuthMiddleware.authUser, UserCourseController.createNote);
 router.post('/all-note', AuthMiddleware.authUser, UserCourseController.getAllNotes);
 router.put('/update-rating', AuthMiddleware.authUser, UserCourseController.updateRating);
+router.post('/check-quiz-answers', AuthMiddleware.authUser, UserCourseController.checkAnswers);
 
 export default router;
