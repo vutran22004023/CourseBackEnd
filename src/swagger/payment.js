@@ -23,7 +23,7 @@
  *         money:
  *           type: number
  *           description: Số tiền thanh toán cho khóa học
- * 
+ *
  *     PayOSResponse:
  *       type: object
  *       properties:
@@ -40,7 +40,7 @@
  *         signature:
  *           type: string
  *           description: "Chữ ký bảo mật của phản hồi"
- * 
+ *
  *     CheckoutRequest:
  *       type: object
  *       properties:
@@ -91,7 +91,7 @@
  *         expiredAt:
  *           type: number
  *           description: "Thời gian hết hạn của giao dịch"
- * 
+ *
  *     CheckoutResponseData:
  *       type: object
  *       properties:
@@ -131,21 +131,21 @@
  *         qrCode:
  *           type: string
  *           description: "Mã QR cho giao dịch"
- * 
+ *
  *     CancelPaymentLinkRequest:
  *       type: object
  *       properties:
  *         cancellationReason:
  *           type: string
  *           description: "Lý do hủy thanh toán"
- * 
+ *
  *     ConfirmWebhookRequest:
  *       type: object
  *       properties:
  *         webhookUrl:
  *           type: string
  *           description: "URL webhook để nhận thông báo"
- * 
+ *
  *     PaymentLinkData:
  *       type: object
  *       properties:
@@ -182,7 +182,7 @@
  *           type: string
  *           nullable: true
  *           description: "Thời gian hủy liên kết thanh toán, nếu có"
- * 
+ *
  *     Transaction:
  *       type: object
  *       properties:
@@ -225,7 +225,7 @@
  *           type: string
  *           nullable: true
  *           description: "Số tài khoản đối ứng, nếu có"
- * 
+ *
  *     Webhook:
  *       type: object
  *       properties:
@@ -243,7 +243,7 @@
  *         signature:
  *           type: string
  *           description: "Chữ ký bảo mật của webhook"
- * 
+ *
  *     WebhookData:
  *       type: object
  *       properties:

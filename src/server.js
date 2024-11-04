@@ -84,7 +84,7 @@ app.use((req, res) => {
 // MongoDB connection URL
 const url = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.qm0ui7p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-app.listen(port, async () => {
+const server = app.listen(port, async () => {
   await mongoose
     .connect(url)
     .then(() => {
@@ -104,3 +104,5 @@ app.listen(port, async () => {
   console.log(`Listening on port http://${localIP}:${port} with CORS origin ${origin}`);
   console.log(`Listening on port http://localhost:${port} with CORS origin http://localhost:${port}`);
 });
+
+export { app, server, redisClient };

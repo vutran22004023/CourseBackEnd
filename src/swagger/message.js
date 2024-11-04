@@ -17,7 +17,7 @@
  *         text:
  *           type: string
  *           description: Nội dung tin nhắn
- * 
+ *
  *     VideoChat:
  *       type: object
  *       properties:
@@ -28,7 +28,7 @@
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Message'
- * 
+ *
  *     ChapterChat:
  *       type: object
  *       properties:
@@ -39,7 +39,7 @@
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/VideoChat'
- * 
+ *
  *     CourseChat:
  *       type: object
  *       properties:
@@ -57,7 +57,7 @@
  * /api/message/postMessage:
  *   post:
  *     summary: Gửi tin nhắn đến video trong khóa học
- *     tags: 
+ *     tags:
  *       - Message
  *     requestBody:
  *       required: true

@@ -4,7 +4,7 @@
  *   get:
  *     summary: "Lấy dữ liệu thống kê về doanh thu và người dùng"
  *     description: "API này trả về dữ liệu thống kê doanh thu, số người dùng và danh sách các khóa học phổ biến nhất trong một khoảng thời gian. Yêu cầu quyền admin để truy cập."
- *     tags: 
+ *     tags:
  *       - Analytics
  *     security:
  *       - bearerAuth: []

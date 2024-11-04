@@ -29,7 +29,7 @@ class CourseService {
       {
         $group: {
           _id: '$courseId',
-          averageRating: { $avg: '$rating' }, 
+          averageRating: { $avg: '$rating' },
           ratingCount: { $sum: 1 },
         },
       },
@@ -163,9 +163,9 @@ class CourseService {
                 dbVideo.video = reqVideo.video;
                 dbVideo.time = reqVideo.time;
                 dbVideo.slug = reqVideo.slug;
-                dbVideo.videoType = reqVideo.videoType;  // Adding videoType
-                dbVideo.file = reqVideo.file;            // Adding file
-                dbVideo.quiz = reqVideo.quiz || [];    
+                dbVideo.videoType = reqVideo.videoType; // Adding videoType
+                dbVideo.file = reqVideo.file; // Adding file
+                dbVideo.quiz = reqVideo.quiz || [];
               }
             }
           });

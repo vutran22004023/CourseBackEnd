@@ -68,8 +68,8 @@ const userCourseSchema = new mongoose.Schema(
     },
     statusRating: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   {
     timestamps: true,

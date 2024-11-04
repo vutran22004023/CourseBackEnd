@@ -11,7 +11,7 @@ import NotificationRouter from './notification.route.js';
 import AnalyticsRouter from './analytic.route.js';
 import VideoSDKRouter from './videoSDK.route.js';
 import TournamentRouter from './tournament.route.js';
-import InformationPageRouter from './InformationPage.route.js'
+import InformationPageRouter from './InformationPage.route.js';
 const router = express.Router();
 
 router.use('/', Login_RegisterRouter);

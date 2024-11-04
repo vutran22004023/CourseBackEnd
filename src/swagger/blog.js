@@ -34,7 +34,7 @@
  * /api/blog/all-posts:
  *   get:
  *     summary: Lấy danh sách tất cả bài đăng
- *     tags: 
+ *     tags:
  *       - Blog
  *     parameters:
  *       - in: query

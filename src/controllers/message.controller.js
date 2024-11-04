@@ -118,32 +118,32 @@ class MessageController {
       const allMessages = courseChat.chapters.flatMap((chapter) =>
         chapter.videos.flatMap((video) =>
           video.messages.map((message) => ({
-            ...message.toObject(),  // Convert message to plain object if it's a Mongoose document
+            ...message.toObject(), // Convert message to plain object if it's a Mongoose document
             chapterId: chapter.chapterId,
             videoId: video.videoId,
           }))
         )
       );
 
-    // Sort messages by timestamp in descending order
-    const sortedMessages = allMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      // Sort messages by timestamp in descending order
+      const sortedMessages = allMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-    const totalMessages = sortedMessages.length;
-    const totalPages = Math.ceil(totalMessages / pageSize);
-    const startIndex = (pageNumber - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+      const totalMessages = sortedMessages.length;
+      const totalPages = Math.ceil(totalMessages / pageSize);
+      const startIndex = (pageNumber - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
 
-    if (startIndex >= totalMessages) {
-      return res.status(404).json({ error: 'Page not found' });
-    }
+      if (startIndex >= totalMessages) {
+        return res.status(404).json({ error: 'Page not found' });
+      }
 
-    const messages = sortedMessages.slice(startIndex, endIndex);
-    const result = {
-      page: pageNumber,
-      totalPages,
-      totalMessages,
-      messages,
-    };
+      const messages = sortedMessages.slice(startIndex, endIndex);
+      const result = {
+        page: pageNumber,
+        totalPages,
+        totalMessages,
+        messages,
+      };
 
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
