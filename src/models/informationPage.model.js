@@ -7,20 +7,20 @@ const RouteSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      default: "",
+      default: '',
     },
     name: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      default: "",
+      default: '',
     },
     description: {
       type: String,
       required: true,
       trim: true,
-      default: "",
+      default: '',
     },
   },
   { _id: false }
@@ -33,19 +33,19 @@ const InformationPageSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    description:{
+    description: {
       type: String,
     },
     paths: {
-      type: [RouteSchema], 
+      type: [RouteSchema],
       required: true,
     },
     logo: {
-      type: String
+      type: String,
     },
     logoSmall: {
-      type: String
-    }
+      type: String,
+    },
   },
   {
     timestamps: true,

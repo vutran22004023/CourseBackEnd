@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
-
 // Define schema for multiple-choice questions
 const questionSchema = new mongoose.Schema({
   title: {
