@@ -10,6 +10,8 @@ import redisClient from './configs/redisClient.config.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import UpdateCourseStatus from './configs/updateStatusRoom.js';
+import i18n from './configs/i18n.config.js';
+
 const app = express();
 
 // Get local IP address function
@@ -42,6 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
+app.use(i18n.init);
 
 const options = {
   definition: {
@@ -69,15 +72,22 @@ const options = {
 };
 const openapiSpecification = swaggerJsdoc(options);
 
+// Get language for I18N
+app.use((req, _, next) => {
+  let lang = req.query.lang || req.cookies.lang || req.get('Accept-Language') || i18n.getLocale();
+  i18n.setLocale(lang);
+  next();
+});
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 app.use('/api', routes);
 UpdateCourseStatus();
 
 // Handle 404
-app.use((req, res) => {
+app.use((_, res) => {
   res.status(404).json({
     status: 404,
-    message: 'Đường dẫn không tồn tại!',
+    message: i18n.__('error.invalid_url'),
   });
 });
 
