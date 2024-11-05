@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "vercel-server.js",
+  "main": "./src/server.js",
   "type": "module",
   "scripts": {
     "start": "nodemon",
