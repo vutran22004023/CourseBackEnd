@@ -1,20 +1,20 @@
 {
     "version": 2,
     "builds": [
-    {
-      "src": "./src/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "./firebase-cert.json"
-        ]
-      }
-    }
-  ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/src/server.js"
+      {
+        "src": "./vercel-server.js",
+        "use": "@vercel/node",
+        "config": {
+          "includeFiles": [
+            "./firebase-cert.json"
+          ]
         }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/vercel-server.js"
+      }
     ]
-}
+  }
