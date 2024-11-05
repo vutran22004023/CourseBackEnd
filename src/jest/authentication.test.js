@@ -24,7 +24,7 @@ describe('Authentication endpoints', () => {
     });
   });
 
-  test("POST /api/register shouldn't create a new user with invalid email", async () => {
+  it("POST /api/register shouldn't create a new user with an invalid email", async () => {
     const user = {
       name: 'test',
       email: TestUtils.generateRandomEmail(),
