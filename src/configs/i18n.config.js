@@ -13,6 +13,7 @@ i18n.configure({
   register: global,
   syncFiles: true,
   objectNotation: true,
+  updateFiles: false,
 });
 
 export default i18n;

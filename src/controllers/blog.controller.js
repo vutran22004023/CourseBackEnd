@@ -3,6 +3,7 @@ import { BlogService } from '../services/index.js';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 import CacheUtility from '../utils/cache.util.js';
+import i18n from 'i18n';
 
 class BlogController {
   // Get all posts for users
@@ -18,7 +19,9 @@ class BlogController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -35,7 +38,9 @@ class BlogController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -48,7 +53,9 @@ class BlogController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -62,7 +69,9 @@ class BlogController {
       CacheUtility.clearCache(`/api/blog/all-posts`);
       CacheUtility.clearCache(`/api/blog/all-posts/admin`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -93,7 +102,9 @@ class BlogController {
           message: 'Bạn không có quyền xóa bài đăng này',
         });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -120,7 +131,9 @@ class BlogController {
       CacheUtility.clearCache(`/api/blog/all-posts/admin`);
       CacheUtility.clearCache(`/api/blog/detail-post/${result.data.slug}`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -140,7 +153,9 @@ class BlogController {
       CacheUtility.clearCache(`/api/blog/all-posts/admin`);
       CacheUtility.clearCache(`/api/blog/detail-post/${result.data.slug}`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 }

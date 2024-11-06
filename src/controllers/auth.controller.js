@@ -1,6 +1,7 @@
 import { Login_Register_Service } from '../services/index.js';
 import axios from 'axios';
 import 'dotenv/config';
+import i18n from 'i18n';
 
 class AuthController {
   async loginInGoogle(req, res) {
@@ -9,7 +10,7 @@ class AuthController {
       if (!displayName || !email || !photoURL) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Chưa điền đầy đủ thông tin',
+          message: i18n.__('error.bad_request'),
         });
       }
       const response = await Login_Register_Service.loginUserGoogle(req.body);
@@ -31,7 +32,7 @@ class AuthController {
       return res.status(200).json(newResponse);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -44,12 +45,12 @@ class AuthController {
       if (!email || !password) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Chưa điền đầy đủ thông tin ',
+          message: i18n.__('error.bad_request'),
         });
       } else if (!isCheckEmail) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Email nhập chưa đúng',
+          message: i18n.__('user.incorrect_email'),
         });
       }
       const response = await Login_Register_Service.LoginIn(req.body);
@@ -73,7 +74,7 @@ class AuthController {
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -86,17 +87,17 @@ class AuthController {
       if (!name || !email || !password || !confirmPassword || role) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Chưa điền đầy đủ thông tin',
+          message: i18n.__('error.bad_request'),
         });
       } else if (!isCheckEmail) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Email nhập chưa đúng',
+          message: i18n.__('user.incorrect_email'),
         });
       } else if (password !== confirmPassword) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Nhập lại mật khẩu không khớp',
+          message: i18n.__('user.incorrect_confirm_password'),
         });
       }
 
@@ -107,7 +108,7 @@ class AuthController {
       if (emailVerificationResponse.data.result !== 'deliverable') {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Email không tồn tại',
+          message: i18n.__('user.not_exist_email'),
         });
       }
 
@@ -115,7 +116,7 @@ class AuthController {
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -139,13 +140,11 @@ class AuthController {
 
       return res.status(200).json({
         status: 'OK',
-        message: 'Đăng xuất thành công',
+        message: i18n.__('user.logout'),
       });
     } catch (err) {
       return res.status(500).json({
-        status: 'ERR',
-        message: 'Đã xảy ra lỗi, vui lòng thử lại',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -158,21 +157,19 @@ class AuthController {
       if (!email) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Chưa điền email',
+          message: i18n.__('user.missing_email'),
         });
       } else if (!isCheckEmail) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Email nhập chưa đúng định dạng',
+          message: i18n.__('user.incorrect_email'),
         });
       }
       const response = await Login_Register_Service.forgotPassword(email);
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        status: 'ERR',
-        message: 'Đã xảy ra lỗi, vui lòng thử lại',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -184,16 +181,14 @@ class AuthController {
       if (password !== confirmPassword) {
         return res.status(400).json({
           status: 'ERR',
-          message: 'Mật khẩu xác nhận không khớp',
+          message: i18n.__('user.incorrect_confirm_password'),
         });
       }
       const response = await Login_Register_Service.resetPassword(id, password);
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        status: 'ERR',
-        message: 'Đã xảy ra lỗi, vui lòng thử lại',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -206,9 +201,7 @@ class AuthController {
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        status: 'ERR',
-        message: 'Đã xảy ra lỗi, vui lòng thử lại',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }

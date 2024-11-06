@@ -3,6 +3,7 @@ import { CourseService } from '../services/index.js';
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 import CacheUtility from '../utils/cache.util.js';
+import i18n from 'i18n';
 dotenv.config();
 
 class CourseController {
@@ -19,7 +20,7 @@ class CourseController {
       CacheUtility.setCache(cacheKey, result);
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: i18n.__('error.server') });
     }
   }
 
@@ -32,7 +33,7 @@ class CourseController {
       CacheUtility.setCache(cacheKey, result);
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: i18n.__('error.server') });
     }
   }
 
@@ -45,7 +46,7 @@ class CourseController {
       CacheUtility.clearCache(`/api/course/all-courses`);
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: i18n.__('error.server') });
     }
   }
 
@@ -59,13 +60,13 @@ class CourseController {
           message: 'Chưa điền đầy đủ thông tin ',
         });
       if (!mongoose.isValidObjectId(id)) {
-        return res.status(200).json({ status: 'ERR', message: 'ID không hợp lệ!' });
+        return res.status(200).json({ status: 'ERR', message: i18n.__('error.invalid_id') });
       }
       const result = await Course.findOneAndDelete({ _id: id });
       if (!result)
         return res.status(404).json({
           status: 404,
-          message: 'Không tìm thấy khóa học!',
+          message: i18n.__('course.not_found'),
         });
       else {
         CacheUtility.clearCache(`/api/course/all-courses`);
@@ -73,10 +74,10 @@ class CourseController {
       }
       res.status(200).json({
         status: 200,
-        message: `Đã xóa khóa học id: ${result._id}`,
+        message: i18n.__('course.deleted', { id: id }),
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: i18n.__('error.server') });
     }
   }
 
@@ -87,7 +88,7 @@ class CourseController {
       if (!mongoose.isValidObjectId(id)) {
         return res.status(400).json({
           status: 400,
-          message: 'ID không hợp lệ!',
+          message: i18n.__('error.invalid_id'),
         });
       }
 
@@ -96,7 +97,7 @@ class CourseController {
       CacheUtility.updateCache(`/api/course/detail-courses/${id}`, result);
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: i18n.__('error.server') });
     }
   }
 }
