@@ -3,7 +3,8 @@
 		"invalid_url": "Đường dẫn không tồn tại!",
 		"invalid_id": "ID không hợp lệ!",
 		"bad_request": "Chưa điền đầy đủ thông tin!",
-		"server": "Server đã xảy ra lỗi!"
+		"server": "Server đã xảy ra lỗi!",
+		"forbidden": "Bạn không có quyền thực hiện hành động này!"
 	},
 	"course": {
 		"not_found": "Không tìm thấy khóa học!",
@@ -17,5 +18,12 @@
 		"not_exist_email": "Email không tồn tại!",
 		"logout": "Đăng xuất thành công!",
 		"missing_email": "Chưa điền email!"
+	},
+	"blog": {
+		"not_found": "Không tìm thấy bài đăng!",
+		"deleted": "Đã xóa bài đăng ID: {{id}}"
+	},
+	"infor_page": {
+		"not_found": "Không tìm thấy thông tin trang!"
 	}
 }
