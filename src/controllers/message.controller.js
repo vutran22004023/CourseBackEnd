@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import CacheUtility from '../utils/cache.util.js';
+import i18n from 'i18n';
 
 class MessageController {
   async postMessage(req, res) {
@@ -34,10 +35,12 @@ class MessageController {
 
       await courseChat.save();
 
-      res.status(201).json({ message: 'Message posted successfully.' });
+      res.status(201).json({ message: i18n.__('message.sent') });
       CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while posting the message.' });
+      return res.status(500).json({
+        error: i18n.__('error.server'),
+      });
     }
   }
 
@@ -50,25 +53,25 @@ class MessageController {
       const pageSize = parseInt(limit, 10);
 
       if (isNaN(pageNumber) || isNaN(pageSize) || pageNumber < 1 || pageSize < 1) {
-        return res.status(400).json({ error: 'Invalid page or limit value.' });
+        return res.status(400).json({ error: i18n.__('error.invalid_page_number') });
       }
 
       const courseChat = await CourseChat.findOne({ courseId });
 
       if (!courseChat) {
-        return res.status(404).json({ error: 'Course not found' });
+        return res.status(404).json({ error: i18n.__('course.not_found') });
       }
 
       const chapter = courseChat.chapters.find((ch) => ch.chapterId.toString() === chapterId);
 
       if (!chapter) {
-        return res.status(404).json({ error: 'Chapter not found' });
+        return res.status(404).json({ error: i18n.__('chapter.not_found') });
       }
 
       const videoChat = chapter.videos.find((vid) => vid.videoId.toString() === videoId);
 
       if (!videoChat) {
-        return res.status(404).json({ error: 'Video not found' });
+        return res.status(404).json({ error: i18n.__('video.not_found') });
       }
 
       const sortedMessages = videoChat.messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -79,7 +82,7 @@ class MessageController {
       const endIndex = startIndex + pageSize;
 
       if (startIndex >= totalMessages) {
-        return res.status(404).json({ error: 'Page not found' });
+        return res.status(404).json({ error: i18n.__('error.not_found') });
       }
 
       const messages = sortedMessages.slice(startIndex, endIndex);
@@ -93,7 +96,9 @@ class MessageController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching messages.' });
+      return res.status(500).json({
+        error: i18n.__('error.server'),
+      });
     }
   }
   async getMessagesCourseId(req, res) {
@@ -105,13 +110,13 @@ class MessageController {
       const pageSize = parseInt(limit, 10);
 
       if (isNaN(pageNumber) || isNaN(pageSize) || pageNumber < 1 || pageSize < 1) {
-        return res.status(400).json({ error: 'Invalid page or limit value.' });
+        return res.status(400).json({ error: i18n.__('error.invalid_page_number') });
       }
 
       const courseChat = await CourseChat.findOne({ courseId });
 
       if (!courseChat) {
-        return res.status(404).json({ error: 'Course not found' });
+        return res.status(404).json({ error: i18n.__('course.not_found') });
       }
 
       // Collect all messages from every chapter and video in the course
@@ -134,7 +139,7 @@ class MessageController {
       const endIndex = startIndex + pageSize;
 
       if (startIndex >= totalMessages) {
-        return res.status(404).json({ error: 'Page not found' });
+        return res.status(404).json({ error: i18n.__('error.not_found') });
       }
 
       const messages = sortedMessages.slice(startIndex, endIndex);
@@ -148,7 +153,9 @@ class MessageController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching messages.' });
+      return res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -160,29 +167,29 @@ class MessageController {
       const courseChat = await CourseChat.findOne({ courseId });
 
       if (!courseChat) {
-        return res.status(404).json({ error: 'Course not found' });
+        return res.status(404).json({ error: i18n.__('course.not_found') });
       }
 
       const chapter = courseChat.chapters.find((ch) => ch.chapterId.toString() === chapterId);
 
       if (!chapter) {
-        return res.status(404).json({ error: 'Chapter not found' });
+        return res.status(404).json({ error: i18n.__('chapter.not_found') });
       }
 
       const videoChat = chapter.videos.find((vid) => vid.videoId.toString() === videoId);
 
       if (!videoChat) {
-        return res.status(404).json({ error: 'Video not found' });
+        return res.status(404).json({ error: i18n.__('video.not_found') });
       }
 
       const message = videoChat.messages.find((msg) => msg._id.toString() === messageId);
 
       if (!message) {
-        return res.status(404).json({ error: 'Message not found' });
+        return res.status(404).json({ error: i18n.__('message.not_found') });
       }
 
       if (message.userId.toString() !== userId) {
-        return res.status(403).json({ error: 'You are not authorized to update this message.' });
+        return res.status(403).json({ error: i18n.__('error.forbidden') });
       }
 
       message.text = text;
@@ -190,10 +197,12 @@ class MessageController {
 
       await courseChat.save();
 
-      res.status(200).json({ message: 'Message updated successfully.' });
+      res.status(200).json({ message: i18n.__('message.updated') });
       CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while updating the message.' });
+      return res.status(500).json({
+        error: i18n.__('error.server'),
+      });
     }
   }
 
@@ -205,41 +214,43 @@ class MessageController {
       const courseChat = await CourseChat.findOne({ courseId });
 
       if (!courseChat) {
-        return res.status(404).json({ error: 'Course not found' });
+        return res.status(404).json({ error: i18n.__('course.not_found') });
       }
 
       const chapter = courseChat.chapters.find((ch) => ch.chapterId.toString() === chapterId);
 
       if (!chapter) {
-        return res.status(404).json({ error: 'Chapter not found' });
+        return res.status(404).json({ error: i18n.__('chapter.not_found') });
       }
 
       const videoChat = chapter.videos.find((vid) => vid.videoId.toString() === videoId);
 
       if (!videoChat) {
-        return res.status(404).json({ error: 'Video not found' });
+        return res.status(404).json({ error: i18n.__('video.not_found') });
       }
 
       const messageIndex = videoChat.messages.findIndex((msg) => msg._id.toString() === messageId);
 
       if (messageIndex === -1) {
-        return res.status(404).json({ error: 'Message not found' });
+        return res.status(404).json({ error: i18n.__('message.not_found') });
       }
 
       const message = videoChat.messages[messageIndex];
 
       if (message.userId.toString() !== userId) {
-        return res.status(403).json({ error: 'You are not authorized to delete this message.' });
+        return res.status(403).json({ error: i18n.__('error.forbidden') });
       }
 
       videoChat.messages.splice(messageIndex, 1);
 
       await courseChat.save();
 
-      res.status(200).json({ message: 'Message deleted successfully.' });
+      res.status(200).json({ message: i18n.__('message.deleted') });
       CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while deleting the message.' });
+      return res.status(500).json({
+        error: i18n.__('error.server'),
+      });
     }
   }
 }
