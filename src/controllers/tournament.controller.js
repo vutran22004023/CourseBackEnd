@@ -1,4 +1,5 @@
 import { TournamentService } from '../services/index.js';
+import i18n from 'i18n';
 
 class TournamentController {
   async getAll(req, res) {
@@ -12,7 +13,7 @@ class TournamentController {
       return res.status(200).json(result);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -24,7 +25,7 @@ class TournamentController {
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -36,7 +37,7 @@ class TournamentController {
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
