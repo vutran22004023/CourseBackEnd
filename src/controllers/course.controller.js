@@ -57,7 +57,7 @@ class CourseController {
       if (!id)
         return res.status(200).json({
           status: 'ERR',
-          message: 'Chưa điền đầy đủ thông tin ',
+          message: i18n.__('error.bad_request'),
         });
       if (!mongoose.isValidObjectId(id)) {
         return res.status(200).json({ status: 'ERR', message: i18n.__('error.invalid_id') });

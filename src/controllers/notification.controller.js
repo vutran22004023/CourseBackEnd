@@ -1,4 +1,5 @@
 import { NotificationService } from '../services/index.js';
+import i18n from 'i18n';
 
 class NotificationController {
   // Send notification
@@ -9,7 +10,9 @@ class NotificationController {
       CacheUtility.clearCache(`/api/notification/dashboard`);
       CacheUtility.clearCache(`/api/notification/modal`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -26,7 +29,9 @@ class NotificationController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -42,7 +47,9 @@ class NotificationController {
       res.status(200).json(result);
       CacheUtility.setCache(cacheKey, result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -54,7 +61,9 @@ class NotificationController {
       CacheUtility.clearCache(`/api/notification/dashboard`);
       CacheUtility.clearCache(`/api/notification/modal`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 
@@ -66,7 +75,9 @@ class NotificationController {
       CacheUtility.clearCache(`/api/notification/dashboard`);
       CacheUtility.clearCache(`/api/notification/modal`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({
+        message: i18n.__('error.server'),
+      });
     }
   }
 }

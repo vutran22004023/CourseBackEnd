@@ -79,19 +79,19 @@ class BlogController {
   async delete(req, res) {
     try {
       if (!mongoose.isValidObjectId(id)) {
-        return res.json({ status: 'ERR', message: 'ID không hợp lệ!' });
+        return res.json({ status: 'ERR', message: i18n.__('error.invalid_id') });
       }
       const result = await Post.findById(id);
       if (!result)
         res.status(404).json({
           status: 404,
-          message: 'Không tìm thấy bài đăng!',
+          message: i18n.__('blog.not_found'),
         });
       else if (req.user.id === result.userId || req.user.isAdmin) {
         await result.deleteOne();
         res.status(200).json({
           status: 200,
-          message: `Đã xóa bài đăng id: ${result._id}`,
+          message: i18n.__('blog.deleted', { id: result._id }),
         });
         CacheUtility.clearCache(`/api/blog/all-posts`);
         CacheUtility.clearCache(`/api/blog/all-posts/admin`);
@@ -99,7 +99,7 @@ class BlogController {
       } else
         res.status(403).json({
           status: 'ERR',
-          message: 'Bạn không có quyền xóa bài đăng này',
+          message: i18n.__('error.forbidden'),
         });
     } catch (error) {
       return res.status(500).json({
@@ -115,14 +115,14 @@ class BlogController {
       if (!mongoose.isValidObjectId(id)) {
         return res.status(400).json({
           status: 400,
-          message: 'ID không hợp lệ!',
+          message: i18n.__('error.invalid_id'),
         });
       }
 
       if (req.user.id !== req.body.userId)
         return res.status(403).json({
           status: 'ERR',
-          message: 'Bạn không có quyền cập nhật bài đăng này',
+          message: i18n.__('error.forbidden'),
         });
       const result = await BlogService.updatePost(id, req.body);
 
@@ -144,7 +144,7 @@ class BlogController {
       if (!mongoose.isValidObjectId(id)) {
         return res.status(400).json({
           status: 400,
-          message: 'ID không hợp lệ!',
+          message: i18n.__('error.invalid_id'),
         });
       }
       const result = await BlogService.confirmPost(id, req.body);

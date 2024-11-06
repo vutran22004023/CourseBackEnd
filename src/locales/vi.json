@@ -1,13 +1,21 @@
 {
 	"error": {
-		"invalid_url": "Đường dẫn không tồn tại!",
 		"invalid_id": "ID không hợp lệ!",
-		"bad_request": "Chưa điền đầy đủ thông tin!",
-		"server": "Server đã xảy ra lỗi!"
+		"bad_request": "Thông tin thiếu hoặc không đúng yêu cầu!",
+		"server": "Server đã xảy ra lỗi!",
+		"forbidden": "Bạn không có quyền thực hiện hành động này!",
+		"not_found": "Không tìm thấy trang này!",
+		"invalid_page_number": "Số trang không hợp lệ!"
 	},
 	"course": {
 		"not_found": "Không tìm thấy khóa học!",
 		"deleted": "Đã xóa khóa học ID: {{id}}"
+	},
+	"chapter": {
+		"not_found": "Không tìm thấy chương!"
+	},
+	"video": {
+		"not_found": "Không tìm thấy video!"
 	},
 	"user": {
 		"not_found": "Không tìm thấy người dùng!",
@@ -16,6 +24,27 @@
 		"incorrect_confirm_password": "Mật khẩu không trùng khớp!",
 		"not_exist_email": "Email không tồn tại!",
 		"logout": "Đăng xuất thành công!",
-		"missing_email": "Chưa điền email!"
+		"missing_email": "Chưa điền email!",
+		"view_all": "Xem tất cả các người dùng"
+	},
+	"blog": {
+		"not_found": "Không tìm thấy bài đăng!",
+		"deleted": "Đã xóa bài đăng ID: {{id}}"
+	},
+	"infor_page": {
+		"not_found": "Không tìm thấy thông tin trang!"
+	},
+	"message": {
+		"sent": "Gửi tin nhắn thành công!",
+		"updated": "Cập nhật tin nhắn thành công!",
+		"not_found": "Không tìm thấy tin nhắn!",
+		"deleted": "Đã xóa tin nhắn!"
+	},
+	"payment": {
+		"success": "Thanh toán thành công!",
+		"updated": "Cập nhật thông tin thanh toán thành công!",
+		"not_found": "Không tìm thấy thông tin thanh toán!",
+		"deleted": "Xóa thông tin thanh toán thành công!",
+		"paid": "Đã thanh toán khóa học!"
 	}
 }

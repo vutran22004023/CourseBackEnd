@@ -87,7 +87,7 @@ UpdateCourseStatus();
 app.use((_, res) => {
   res.status(404).json({
     status: 404,
-    message: i18n.__('error.invalid_url'),
+    message: i18n.__('error.not_found'),
   });
 });
 
