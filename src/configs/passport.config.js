@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import User from '../models/user.model.js';
 import 'dotenv/config';
+import i18n from 'i18n';
 
 function customExtractor(req) {
   let token = null;
@@ -23,7 +24,7 @@ passport.use(
         } else {
           const res = {
             status: 'ERR',
-            message: 'Không tìm thấy người dùng!',
+            message: i18n.__('user.not_found'),
           };
           return done(null, false, res);
         }
@@ -31,7 +32,7 @@ passport.use(
       .catch((err) => {
         const res = {
           status: 'ERR',
-          message: 'Có lỗi khi xác thực người dùng!',
+          message: i18n.__('user.auth_error'),
         };
         return done(err, false, res);
       });
