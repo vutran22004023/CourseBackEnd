@@ -1,5 +1,21 @@
 {
 	"error": {
-		"invalid_url": "Đường dẫn không tồn tại!"
+		"invalid_url": "Đường dẫn không tồn tại!",
+		"invalid_id": "ID không hợp lệ!",
+		"bad_request": "Chưa điền đầy đủ thông tin!",
+		"server": "Server đã xảy ra lỗi!"
+	},
+	"course": {
+		"not_found": "Không tìm thấy khóa học!",
+		"deleted": "Đã xóa khóa học ID: {{id}}"
+	},
+	"user": {
+		"not_found": "Không tìm thấy người dùng!",
+		"auth_error": "Có lỗi khi xác thực người dùng!",
+		"incorrect_email": "Email nhập chưa đúng!",
+		"incorrect_confirm_password": "Mật khẩu không trùng khớp!",
+		"not_exist_email": "Email không tồn tại!",
+		"logout": "Đăng xuất thành công!",
+		"missing_email": "Chưa điền email!"
 	}
 }
