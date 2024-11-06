@@ -91,7 +91,7 @@ class BlogController {
         await result.deleteOne();
         res.status(200).json({
           status: 200,
-          message: i18n.__('blog.deleted'),
+          message: i18n.__('blog.deleted', { id: result._id }),
         });
         CacheUtility.clearCache(`/api/blog/all-posts`);
         CacheUtility.clearCache(`/api/blog/all-posts/admin`);
