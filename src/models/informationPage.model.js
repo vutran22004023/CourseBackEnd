@@ -1,5 +1,45 @@
 import mongoose from 'mongoose';
 
+const FooterItemSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    items: [
+      {
+        label: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        link: {
+          type: String,
+          trim: true,
+        },
+      },
+    ],
+  },
+  { _id: false }
+);
+
+const SocialMediaSchema = new mongoose.Schema(
+  {
+    platform: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    url: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { _id: false }
+);
+
 const RouteSchema = new mongoose.Schema(
   {
     route: {
@@ -26,6 +66,27 @@ const RouteSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const ContactInfoSchema = new mongoose.Schema(
+  {
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    address: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { _id: false }
+);
+
 const InformationPageSchema = new mongoose.Schema(
   {
     name: {
@@ -45,6 +106,15 @@ const InformationPageSchema = new mongoose.Schema(
     },
     logoSmall: {
       type: String,
+    },
+    footer: {
+      type: [FooterItemSchema],
+    },
+    socialMediaLinks: {
+      type: [SocialMediaSchema],
+    },
+    contactInfo: {
+      type: ContactInfoSchema,
     },
   },
   {
