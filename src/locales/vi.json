@@ -24,7 +24,8 @@
 		"incorrect_confirm_password": "Mật khẩu không trùng khớp!",
 		"not_exist_email": "Email không tồn tại!",
 		"logout": "Đăng xuất thành công!",
-		"missing_email": "Chưa điền email!"
+		"missing_email": "Chưa điền email!",
+		"view_all": "Xem tất cả các người dùng"
 	},
 	"blog": {
 		"not_found": "Không tìm thấy bài đăng!",

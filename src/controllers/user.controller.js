@@ -1,5 +1,6 @@
 import { UserService } from '../services/index.js';
 import { UserModel } from '../models/index.js';
+import i18n from 'i18n';
 
 class UserController {
   async getAllUsers(req, res) {
@@ -13,8 +14,8 @@ class UserController {
       const response = await UserService.getAllUsers(limitValue, pageValue, sortArray, filterArray);
       return res.status(200).json(response);
     } catch (err) {
-      return res.status(404).json({
-        message: err,
+      return res.status(500).json({
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -22,17 +23,11 @@ class UserController {
   async getDetailUser(req, res) {
     try {
       const userid = req.params.id;
-      if (!userid) {
-        return res.status(200).json({
-          status: 'ERR',
-          message: 'Chưa truyền id',
-        });
-      }
       const response = await UserService.getDetailUser(userid);
       return res.status(200).json(response);
     } catch (err) {
-      return res.status(404).json({
-        message: err,
+      return res.status(500).json({
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -42,17 +37,11 @@ class UserController {
       const userid = req.params.id;
       const data = req.body;
       const isAdmin = req.user.isAdmin;
-      if (!userid) {
-        return res.status(200).json({
-          status: 'ERR',
-          message: 'Chưa truyền id',
-        });
-      }
       const response = await UserService.updateUser(userid, data, isAdmin);
       return res.status(200).json(response);
     } catch (err) {
-      return res.status(404).json({
-        message: err,
+      return res.status(500).json({
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -60,17 +49,11 @@ class UserController {
   async deleteUser(req, res) {
     try {
       const userid = req.params.id;
-      if (!userid) {
-        return res.status(200).json({
-          status: 'ERR',
-          message: 'Chưa truyền id',
-        });
-      }
       const response = await UserService.deleteUser(userid);
       return res.status(200).json(response);
     } catch (err) {
-      return res.status(404).json({
-        message: err,
+      return res.status(500).json({
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -78,17 +61,11 @@ class UserController {
   async deleteManyUser(req, res) {
     try {
       const userids = req.body.id;
-      if (!userids) {
-        return res.status(200).json({
-          status: 'ERR',
-          message: 'Chưa truyền id',
-        });
-      }
       const response = await UserService.deleteManyUser(userids);
       return res.status(200).json(response);
     } catch (err) {
-      return res.status(404).json({
-        message: err,
+      return res.status(500).json({
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -101,12 +78,12 @@ class UserController {
       if (!name || !email || !password || !role) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Chưa điền đầy đủ thông tin',
+          message: i18n.__('error.bad_request'),
         });
       } else if (!isCheckEmail) {
         return res.status(200).json({
           status: 'ERR',
-          message: 'Email nhập chưa đúng',
+          message: i18n.__('user.incorrect_email'),
         });
       }
 
@@ -114,7 +91,7 @@ class UserController {
       return res.status(200).json(response);
     } catch (err) {
       return res.status(500).json({
-        message: err,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -159,7 +136,7 @@ class UserController {
       // Trả về kết quả
       return res.status(200).json({
         status: 200,
-        message: 'Xem tất cả các người dùng',
+        message: i18n.__('user.view_all'),
         data: result,
         total: totalUsers,
         pageCurrent: pageValue,
@@ -167,9 +144,7 @@ class UserController {
       });
     } catch (err) {
       return res.status(500).json({
-        status: 500,
-        message: 'Internal server error',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
