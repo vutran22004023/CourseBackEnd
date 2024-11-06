@@ -6,6 +6,7 @@ import PayOS from '@payos/node';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import PayCourse from '../models/paycourse.model.js';
+import i18n from 'i18n';
 
 const payos = new PayOS(`${process.env.CLIENT_ID}`, `${process.env.API_KEY}`, `${process.env.CHECKSUM_KEY}`);
 class PayMentController {
@@ -304,8 +305,7 @@ class PayMentController {
     } catch (err) {
       console.error('Lỗi khi lấy thông tin thanh toán:', err);
       return res.status(500).json({
-        message: 'Có lỗi xảy ra trong quá trình lấy thông tin',
-        error: err.message || 'Không xác định được lỗi',
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -315,7 +315,7 @@ class PayMentController {
 
       // Kiểm tra các giá trị đầu vào
       if (!idUser || !courseId || !paymentStatus || !money) {
-        return res.status(400).json({ message: 'Thiếu thông tin yêu cầu' });
+        return res.status(400).json({ message: i18n.__('error.bad_request') });
       }
 
       // Tạo mới document PayCourse
@@ -329,14 +329,13 @@ class PayMentController {
       await newPayCourse.save();
 
       return res.status(201).json({
-        message: 'Thanh toán thành công',
+        message: i18n.__('payment.success'),
       });
     } catch (err) {
       // Xử lý lỗi
       console.error('Lỗi khi lưu dữ liệu paycourse:', err);
       return res.status(500).json({
-        message: 'Có lỗi xảy ra trong quá trình xử lý',
-        error: err.message || 'Không xác định được lỗi',
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -350,16 +349,15 @@ class PayMentController {
       const updatedPayCourse = await PayCourse.findByIdAndUpdate(id, updateData, { new: true });
 
       if (!updatedPayCourse) {
-        return res.status(404).json({ message: 'Không tìm thấy thông tin paycourse để cập nhật' });
+        return res.status(404).json({ message: i18n.__('payment.not_found') });
       }
 
       // Trả về thông báo thành công và dữ liệu đã cập nhật
-      return res.status(200).json({ message: 'Cập nhật thông tin paycourse thành công', data: updatedPayCourse });
+      return res.status(200).json({ message: i18n.__('payment.updated'), data: updatedPayCourse });
     } catch (err) {
       console.error('Lỗi khi cập nhật thông tin thanh toán:', err);
       return res.status(500).json({
-        message: 'Có lỗi xảy ra trong quá trình cập nhật thông tin',
-        error: err.message || 'Không xác định được lỗi',
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -372,16 +370,15 @@ class PayMentController {
       const deletedPayCourse = await PayCourse.findByIdAndDelete(id);
 
       if (!deletedPayCourse) {
-        return res.status(404).json({ message: 'Không tìm thấy thông tin paycourse để xóa' });
+        return res.status(404).json({ message: i18n.__('payment.not_found') });
       }
 
       // Trả về thông báo thành công
-      return res.status(200).json({ message: 'Xóa thông tin paycourse thành công', data: deletedPayCourse });
+      return res.status(200).json({ message: i18n.__('payment.deleted'), data: deletedPayCourse });
     } catch (err) {
       console.error('Lỗi khi xóa thông tin thanh toán:', err);
       return res.status(500).json({
-        message: 'Có lỗi xảy ra trong quá trình xóa thông tin',
-        error: err.message || 'Không xác định được lỗi',
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -398,15 +395,14 @@ class PayMentController {
       }).lean();
 
       if (!paidCourse) {
-        return res.status(404).json({ message: 'Không tìm thấy thông tin paycourse' });
+        return res.status(404).json({ message: i18n.__('payment.not_found') });
       }
 
-      return res.status(200).json({ message: 'Đã thanh toán khóa học', data: paidCourse });
+      return res.status(200).json({ message: i18n.__('payment.paid'), data: paidCourse });
     } catch (err) {
       console.error('Lỗi khi lấy thông tin thanh toán:', err);
       return res.status(500).json({
-        message: 'Có lỗi xảy ra trong quá trình lấy thông tin',
-        error: err.message || 'Không xác định được lỗi',
+        message: i18n.__('error.server'),
       });
     }
   }

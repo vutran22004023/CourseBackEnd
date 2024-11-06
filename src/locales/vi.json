@@ -1,7 +1,7 @@
 {
 	"error": {
 		"invalid_id": "ID không hợp lệ!",
-		"bad_request": "Chưa điền đầy đủ thông tin!",
+		"bad_request": "Thông tin thiếu hoặc không đúng yêu cầu!",
 		"server": "Server đã xảy ra lỗi!",
 		"forbidden": "Bạn không có quyền thực hiện hành động này!",
 		"not_found": "Không tìm thấy trang này!",
@@ -38,5 +38,12 @@
 		"updated": "Cập nhật tin nhắn thành công!",
 		"not_found": "Không tìm thấy tin nhắn!",
 		"deleted": "Đã xóa tin nhắn!"
+	},
+	"payment": {
+		"success": "Thanh toán thành công!",
+		"updated": "Cập nhật thông tin thanh toán thành công!",
+		"not_found": "Không tìm thấy thông tin thanh toán!",
+		"deleted": "Xóa thông tin thanh toán thành công!",
+		"paid": "Đã thanh toán khóa học!"
 	}
 }
