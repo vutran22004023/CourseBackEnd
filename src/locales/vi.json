@@ -29,7 +29,11 @@
 	},
 	"blog": {
 		"not_found": "Không tìm thấy bài đăng!",
-		"deleted": "Đã xóa bài đăng ID: {{id}}"
+		"deleted": "Đã xóa bài đăng ID: {{id}}",
+		"view_all":"Xem tất cả bài đăng!",
+		"created": "Tạo bài đăng thành công!",
+		"updated": "Đã cập nhật bài đăng ID: {{id}}",
+		"existed_slug": "Đã có slug '{{slug}}'"
 	},
 	"infor_page": {
 		"not_found": "Không tìm thấy thông tin trang!"
@@ -46,5 +50,10 @@
 		"not_found": "Không tìm thấy thông tin thanh toán!",
 		"deleted": "Xóa thông tin thanh toán thành công!",
 		"paid": "Đã thanh toán khóa học!"
+	},
+	"auth": {
+		"invalid_token": "Token không hợp lệ!",
+		"admin": "Tài khoản không có quyền admin!",
+		"not_found": "Không có token!"
 	}
 }

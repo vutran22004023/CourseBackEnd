@@ -1,6 +1,7 @@
 import express from 'express';
 import Login_registerController from '../controllers/auth.controller.js';
 import { AuthMiddleware } from '../middlewares/index.js';
+import i18n from 'i18n';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get('/get-token', (req, res) => {
   if (token) {
     res.status(200).json({ token });
   } else {
-    res.status(404).json({ message: 'Token not found' });
+    res.status(404).json({ message: i18n.__('auth.not_found') });
   }
 });
 router.get('/get-refreshtoken', (req, res) => {
@@ -26,7 +27,7 @@ router.get('/get-refreshtoken', (req, res) => {
   if (token) {
     res.status(200).json({ token });
   } else {
-    res.status(404).json({ message: 'Token not found' });
+    res.status(404).json({ message: i18n.__('auth.not_found') });
   }
 });
 

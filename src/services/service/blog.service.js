@@ -1,5 +1,6 @@
 import Post from '../../models/post.model.js';
 import 'dotenv/config';
+import i18n from 'i18n';
 
 class BlogService {
   async getAllPosts(limit, page, sort, filter, isAdmin = false) {
@@ -19,7 +20,7 @@ class BlogService {
 
     return {
       status: 200,
-      message: 'Xem tất cả bài đăng',
+      message: i18n.__('blog.view_all'),
       data: allPosts,
       total: totalPosts,
       pageCurrent: Number(page),
@@ -32,13 +33,13 @@ class BlogService {
     if (!checkPost) {
       return {
         status: 'ERR',
-        message: 'Bài đăng không tồn tại',
+        message: i18n.__('blog.not_found'),
       };
     }
     return {
       status: 200,
       data: checkPost,
-      message: 'Show dữ liệu thành công',
+      message: '',
     };
   }
 
@@ -52,7 +53,7 @@ class BlogService {
       return {
         status: 200,
         data: createPost,
-        message: 'Đã tạo bài đăng thành công',
+        message: i18n.__('blog.created'),
       };
     } catch (err) {
       const error = this.validator(err);
@@ -69,12 +70,12 @@ class BlogService {
       if (!post) {
         return {
           status: 'ERR',
-          message: 'Không tìm thấy bài đăng!',
+          message: i18n.__('blog.not_found'),
         };
       }
       return {
         status: 200,
-        message: `Đã cập nhật bài đăng id: ${post._id}`,
+        message: i18n.__('blog.updated', { id: post._id }),
         data: post,
       };
     } catch (err) {
@@ -91,12 +92,12 @@ class BlogService {
       if (!post) {
         return {
           status: 'ERR',
-          message: 'Không tìm thấy bài đăng!',
+          message: i18n.__('blog.not_found'),
         };
       }
       return {
         status: 200,
-        message: `Đã cập nhật bài đăng id: ${post._id}`,
+        message: i18n.__('blog.updated', { id: post._id }),
         data: post,
       };
     } catch (err) {
@@ -127,7 +128,7 @@ class BlogService {
       let key = Object.keys(err.keyValue)[0];
       return {
         status: 'ERR',
-        message: `Đã có slug "${err.keyValue[key]}"`,
+        message: i18n.__('blog.existed_slug', { slug: err.keyValue[key] }),
       };
     } else return 0;
   }

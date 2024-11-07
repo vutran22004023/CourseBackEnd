@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { TokenMiddleware } from './index.js';
+import i18n from 'i18n';
 
 class AuthMiddleware {
   isTokenExpiringSoon = (token) => {
@@ -26,7 +27,7 @@ class AuthMiddleware {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         status: 'ERR',
-        message: 'Token không hợp lệ hoặc không có token',
+        message: i18n.__('auth.invalid_token'),
       });
     }
 
@@ -36,7 +37,7 @@ class AuthMiddleware {
       if (err) {
         return res.status(404).json({
           status: 'ERR',
-          message: 'Token không đúng',
+          message: i18n.__('auth.invalid_token'),
         });
       }
       if (this.isTokenExpiringSoon(token)) {
@@ -66,7 +67,7 @@ class AuthMiddleware {
       } else {
         return res.status(403).json({
           status: 'ERR',
-          message: 'Tài khoản không có quyền admin',
+          message: i18n.__('auth.admin'),
         });
       }
     });
@@ -78,7 +79,7 @@ class AuthMiddleware {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         status: 'ERR',
-        message: 'Token không hợp lệ hoặc không có token',
+        message: i18n.__('auth.invalid_token'),
       });
     }
 
@@ -89,7 +90,7 @@ class AuthMiddleware {
       if (err) {
         return res.status(404).json({
           status: 'ERR',
-          message: 'Token không đúng',
+          message: i18n.__('auth.invalid_token'),
         });
       }
       if (this.isTokenExpiringSoon(token)) {
@@ -118,7 +119,7 @@ class AuthMiddleware {
       } else {
         return res.status(403).json({
           status: 'ERR',
-          message: 'Bạn không có quyền truy cập',
+          message: i18n.__('error.forbidden'),
         });
       }
     });
@@ -130,7 +131,7 @@ class AuthMiddleware {
       if (err) {
         return res.status(404).json({
           status: 'ERR',
-          message: 'Token không đúng',
+          message: i18n.__('auth.invalid_token'),
         });
       }
       if (user) {
@@ -145,7 +146,7 @@ class AuthMiddleware {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         status: 'ERR',
-        message: 'Token không hợp lệ hoặc không có token',
+        message: i18n.__('auth.invalid_token'),
       });
     }
 
@@ -153,7 +154,7 @@ class AuthMiddleware {
     if (!refreshToken) {
       return res.status(401).json({
         status: 'ERR',
-        message: 'Không có refreshToken được cung cấp',
+        message: i18n.__('auth.invalid_token'),
       });
     }
 
@@ -161,7 +162,7 @@ class AuthMiddleware {
       if (err) {
         return res.status(403).json({
           status: 'ERR',
-          message: 'RefreshToken không hợp lệ',
+          message: i18n.__('auth.invalid_token'),
         });
       }
 
@@ -190,9 +191,7 @@ class AuthMiddleware {
       } catch (error) {
         console.error('Error while setting access token cookie:', error);
         return res.status(500).json({
-          status: 'ERR',
-          message: 'Đã xảy ra lỗi khi tạo access token mới',
-          error: error.message,
+          message: i18n.__('error.server'),
         });
       }
     });
