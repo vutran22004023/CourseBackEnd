@@ -46,5 +46,9 @@
 		"not_found": "Không tìm thấy thông tin thanh toán!",
 		"deleted": "Xóa thông tin thanh toán thành công!",
 		"paid": "Đã thanh toán khóa học!"
+	},
+	"auth": {
+		"invalid_token": "Token không hợp lệ!",
+		"admin": "Tài khoản không có quyền admin!"
 	}
 }
