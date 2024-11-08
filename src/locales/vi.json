@@ -25,7 +25,12 @@
 		"not_exist_email": "Email không tồn tại!",
 		"logout": "Đăng xuất thành công!",
 		"missing_email": "Chưa điền email!",
-		"view_all": "Xem tất cả các người dùng"
+		"view_all": "Xem tất cả các người dùng",
+		"detail": "Thông tin của người dùng ID: {{id}}",
+		"updated": "Đã cập nhật người dùng ID: {{id}}",
+		"deleted": "Đã xóa người dùng ID: {{id}}",
+		"deleted_many": "Xóa người dùng thành công",
+		"created": "Tạo người dùng thành công!"
 	},
 	"blog": {
 		"not_found": "Không tìm thấy bài đăng!",
