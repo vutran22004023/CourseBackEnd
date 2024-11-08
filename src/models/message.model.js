@@ -22,7 +22,7 @@ const messageSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { _id: false });
 
 const videoChatSchema = new mongoose.Schema(
   {
