@@ -9,7 +9,16 @@
 	},
 	"course": {
 		"not_found": "Không tìm thấy khóa học!",
-		"deleted": "Đã xóa khóa học ID: {{id}}"
+		"deleted": "Đã xóa khóa học ID: {{id}}",
+		"view_all": "Xem tất cả khóa học!",
+		"not_paid": "Khóa học chưa thanh toán!",
+		"created":"Tạo khóa học thành công!",
+		"updated": "Đã cập nhật khóa học ID: {{id}}",
+		"existed_slug": "Đã có slug '{{slug}}'",
+		"duplicate_slug": "Slug video trong các chương bị trùng lặp!",
+		"missing_slug": "Thiếu slug!",
+		"namel": "khóa học",
+		"existed": "Đã có {{field}} {{value}}"
 	},
 	"chapter": {
 		"not_found": "Không tìm thấy chương!"
