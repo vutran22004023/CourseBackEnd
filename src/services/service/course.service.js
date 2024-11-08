@@ -6,6 +6,8 @@ import moment from 'moment';
 import 'moment-duration-format';
 import PayCourse from '../../models/paycourse.model.js';
 import { UserCourse } from '../../models/user_course.model.js';
+import i18n from 'i18n';
+import logger from '../../configs/logger.config.js';
 
 class CourseService {
   async getAllCourses(limit, page, sort, filter) {
@@ -50,7 +52,7 @@ class CourseService {
     }));
     return {
       status: 200,
-      message: 'Xem tất cả khóa học',
+      message: i18n.__('course.view_all'),
       data: coursesWithRating,
       total: totalCourses,
       pageCurrent: Number(page),
@@ -71,7 +73,7 @@ class CourseService {
     if (!course) {
       return {
         status: 'ERR',
-        message: 'Khóa học không tồn tại',
+        message: i18n.__('course.not_found'),
       };
     }
 
@@ -85,7 +87,7 @@ class CourseService {
       if (!payCourse) {
         return {
           status: 'ERR',
-          message: 'Bạn chưa thanh toán khóa học này',
+          message: i18n.__('course.not_paid'),
         };
       }
     }
@@ -93,7 +95,7 @@ class CourseService {
     return {
       status: 200,
       data: course,
-      message: 'Show dữ liệu thành công',
+      message: '',
     };
   }
 
@@ -108,7 +110,7 @@ class CourseService {
         return {
           status: 200,
           data: createCourse,
-          message: 'Đã tạo khóa học thành công',
+          message: i18n.__('course.created'),
         };
       }
     } catch (err) {
@@ -130,7 +132,7 @@ class CourseService {
       if (!course) {
         return {
           status: 'ERR',
-          message: 'Không tìm thấy khóa học!',
+          message: i18n.__('course.not_found'),
         };
       }
 
@@ -192,7 +194,7 @@ class CourseService {
       const updatedCourse = await CourseModel.findById(courseId).lean();
       return {
         status: 200,
-        message: `Đã cập nhật khóa học id: ${updatedCourse._id}`,
+        message: i18n.__('course.updated', { id: updatedCourse._id }),
         data: updatedCourse,
       };
     } catch (err) {
@@ -212,10 +214,10 @@ class CourseService {
       if (error.kind === 'unique') {
         const readableField =
           {
-            name: 'khóa học',
+            name: i18n.__('course.name'),
             childname: 'video',
           }[error.path] || error.path;
-        error.message = `Đã có ${readableField} "${error.value}"`;
+        error.message = i18n.__('course.existed', { field: readableField, value: error.value });
       }
       return {
         status: 'ERR',
@@ -225,7 +227,7 @@ class CourseService {
       let key = Object.keys(err.keyValue)[0];
       return {
         status: 'ERR',
-        message: `Đã có slug "${err.keyValue[key]}"`,
+        message: i18n.__('course.existed_slug', { slug: err.keyValue[key] }),
       };
     } else return 0;
   }
@@ -289,12 +291,12 @@ class CourseService {
     if (emptySlug)
       return {
         status: 'ERR',
-        message: 'Thiếu slug video',
+        message: i18n.__('course.missing_slug'),
       };
     else if (hasDuplicate)
       return {
         status: 'ERR',
-        message: 'Slug video trong các chương bị trùng lặp',
+        message: i18n.__('course.duplicate_slug'),
       };
     else return 0;
   }
@@ -310,7 +312,7 @@ class CourseService {
       duration = moment.duration(duration);
       return duration;
     } catch (err) {
-      console.log('CourseService ~ getVideoDuration ~ err:', err);
+      logger.error('CourseService ~ getVideoDuration ~ err:', err);
       return null;
     }
   }

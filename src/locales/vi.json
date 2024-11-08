@@ -9,7 +9,18 @@
 	},
 	"course": {
 		"not_found": "Không tìm thấy khóa học!",
-		"deleted": "Đã xóa khóa học ID: {{id}}"
+		"deleted": "Đã xóa khóa học ID: {{id}}",
+		"view_all": "Xem tất cả khóa học!",
+		"not_paid": "Khóa học chưa thanh toán!",
+		"created":"Tạo khóa học thành công!",
+		"updated": "Đã cập nhật khóa học ID: {{id}}",
+		"existed_slug": "Đã có slug '{{slug}}'",
+		"duplicate_slug": "Slug video trong các chương bị trùng lặp!",
+		"missing_slug": "Thiếu slug!",
+		"namel": "khóa học",
+		"existed": "Đã có {{field}} {{value}}",
+		"invalid_rating": "Đánh giá phải trong khoảng từ 0 đến 5",
+		"rating_updated": "Đã cập nhật đánh giá!"
 	},
 	"chapter": {
 		"not_found": "Không tìm thấy chương!"
@@ -25,7 +36,12 @@
 		"not_exist_email": "Email không tồn tại!",
 		"logout": "Đăng xuất thành công!",
 		"missing_email": "Chưa điền email!",
-		"view_all": "Xem tất cả các người dùng"
+		"view_all": "Xem tất cả các người dùng",
+		"detail": "Thông tin của người dùng ID: {{id}}",
+		"updated": "Đã cập nhật người dùng ID: {{id}}",
+		"deleted": "Đã xóa người dùng ID: {{id}}",
+		"deleted_many": "Xóa người dùng thành công",
+		"created": "Tạo người dùng thành công!"
 	},
 	"blog": {
 		"not_found": "Không tìm thấy bài đăng!",
@@ -55,5 +71,37 @@
 		"invalid_token": "Token không hợp lệ!",
 		"admin": "Tài khoản không có quyền admin!",
 		"not_found": "Không có token!"
+	},
+	"tournament": {
+		"view_all":"Xem tất cả giải đấu!",
+		"not_found": "Không tìm thấy giải đấu!"
+	},
+	"ranking": {
+		"not_found": "Chưa có xếp hạng!"
+	},
+	"notification": {
+		"sent": "Gửi thông báo thành công!",
+		"deleted": "Xóa thông báo thành công!",
+		"deleted_all": "Xóa tất cả thông báo thành công!"
+	},
+	"user_course": {
+		"created":"Đã lưu tiến độ học!",
+		"no_next_video": "Tiến độ học cập nhật thành công! Không còn video tiếp theo!",
+		"updated": "Cập nhật tiến độ học thành công!"
+	},
+	"note": {
+		"created":"Đã lưu ghi chú!",
+		"updated": "Cập nhật ghi chú thành công!",
+		"deleted": "Xóa ghi chú thành công!",
+		"not_found":"Không tìm thấy ghi chú!"
+	},
+	"test": {
+		"success": "Bài kiểm tra hoàn thành thành công!",
+		"fail": "Bài kiểm tra chưa hoàn thành. Vui lòng kiểm tra lại các câu sai."
+	},
+	"algorithm": {
+		"not_found":"Không tìm thấy thuật toán!",
+		"correct": "Kết quả chính xác!",
+		"incorrect": "Kết quả sai. Vui lòng kiểm tra lại thuật toán của bạn."
 	}
 }

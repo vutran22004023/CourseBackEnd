@@ -11,6 +11,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import UpdateCourseStatus from './configs/updateStatusRoom.js';
 import i18n from './configs/i18n.config.js';
+import logger from './configs/logger.config.js';
 
 const app = express();
 
@@ -98,21 +99,21 @@ const server = app.listen(port, async () => {
   await mongoose
     .connect(url)
     .then(() => {
-      console.log('Connect DB successfully');
+      logger.info('Connect DB successfully');
     })
     .catch((err) => {
-      console.log(err);
+      logger.error(err);
     });
 
   try {
     await redisClient.connect();
-    console.log('Connect Redis successfully');
+    logger.info('Connect Redis successfully');
   } catch (err) {
-    console.log('Redis connection error:', err);
+    logger.error('Redis connection error:', err);
   }
 
-  console.log(`Listening on port http://${localIP}:${port} with CORS origin ${origin}`);
-  console.log(`Listening on port http://localhost:${port} with CORS origin http://localhost:${port}`);
+  logger.info(`Listening on port http://${localIP}:${port} with CORS origin ${origin}`);
+  logger.info(`Listening on port http://localhost:${port} with CORS origin http://localhost:${port}`);
 });
 
 export { app, server, redisClient };

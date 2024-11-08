@@ -1,6 +1,8 @@
 import { UserModel } from '../../models/index.js';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
+import i18n from 'i18n';
+import logger from '../../configs/logger.config.js';
 
 const getAllUsers = async (limit, page, sort, filter) => {
   try {
@@ -21,16 +23,17 @@ const getAllUsers = async (limit, page, sort, filter) => {
 
     return {
       status: 200,
-      message: 'Xem tất cả các người dùng',
+      message: i18n.__('user.view_all'),
       data: allUsers,
       total: totalUsers,
       pageCurrent: Number(page),
       totalPage: Math.ceil(totalUsers / limit),
     };
   } catch (err) {
+    logger.error(`Get all users: ${err}`);
     return {
-      status: 404,
-      message: err.message,
+      status: 500,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -43,21 +46,22 @@ const getDetailUser = async (id) => {
     if (!checkUser) {
       return {
         status: 'ERR',
-        message: 'Id không tồn tại',
+        message: i18n.__('user.not_found'),
       };
     }
     return {
       status: 200,
-      message: `Show thông tin của id: ${checkUser.id}`,
+      message: i18n.__('user.detail', { id: checkUser.id }),
       data: {
         password: 'Not password',
         ...checkUser._doc,
       },
     };
   } catch (err) {
+    logger.error(`Get detail user: ${err}`);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -70,7 +74,7 @@ const updateUser = async (id, data, isAdmin) => {
     if (!checkUser) {
       return {
         status: 'ERR',
-        message: 'Id không tồn tại',
+        message: i18n.__('user.not_found'),
       };
     }
     if (!isAdmin) {
@@ -83,15 +87,16 @@ const updateUser = async (id, data, isAdmin) => {
     const updateUser = await UserModel.findByIdAndUpdate(id, data, { new: true });
     return {
       status: 200,
-      message: `Cập nhập thành công id : ${updateUser._id}`,
+      message: i18n.__('user.updated', { id: updateUser._id }),
       data: {
         ...updateUser._doc,
       },
     };
   } catch (err) {
+    logger.error(`Update user: ${err}`);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -104,18 +109,19 @@ const deleteUser = async (id) => {
     if (!checkUser) {
       return {
         status: 'ERR',
-        message: 'Id không tồn tại',
+        message: i18n.__('user.not_found'),
       };
     }
     const deleteUser = await UserModel.findByIdAndDelete(id, { new: true });
     return {
       status: 200,
-      message: `Xóa thành công id : ${deleteUser._id}`,
+      message: i18n.__('user.deleted', { id: deleteUser._id }),
     };
   } catch (err) {
+    logger.error(`Delete user: ${err}`);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -124,26 +130,27 @@ const deleteManyUser = async (ids) => {
   try {
     if (!Array.isArray(ids) || ids.length === 0) {
       return {
-        status: 'ERR',
-        message: 'Danh sách ID không hợp lệ hoặc trống',
+        status: 400,
+        message: i18n.__('error.bad_request'),
       };
     }
     const validIds = ids.every((id) => mongoose.Types.ObjectId.isValid(id));
     if (!validIds) {
       return {
         status: 400,
-        message: 'Một hoặc nhiều ID không hợp lệ',
+        message: i18n.__('error.bad_request'),
       };
     }
     await UserModel.deleteMany({ _id: { $in: ids } });
     return {
       status: 200,
-      message: 'Xóa người dùng thành công',
+      message: i18n.__('user.deleted_many'),
     };
   } catch (err) {
+    logger.error(`Delete many users: ${err}`);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -170,19 +177,18 @@ const createUser = async (user) => {
     if (createdUser) {
       return {
         status: 200,
-        message: 'Tạo người dùng thành công',
+        message: i18n.__('user.created'),
         data: {
           ...createdUser._doc,
           // password: 'not password',
         },
       };
-    } else {
-      throw new Error('Tạo người dùng thất bại.');
     }
   } catch (err) {
+    logger.error(`Update user: ${err}`);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };

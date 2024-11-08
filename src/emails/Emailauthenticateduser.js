@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
+import logger from '../configs/logger.config';
 
 const Emailauthenticateduser = async (user, resetToken) => {
   // đương dẫn client tới chỗ input nhập lại mật khẩu
@@ -29,7 +30,7 @@ const Emailauthenticateduser = async (user, resetToken) => {
     subject: 'Xác thực người dùng',
     html: htmlContent,
   });
-  console.log('Message sent: %s', info.messageId);
+  logger.info('Message sent: %s', info.messageId);
 };
 
 export default Emailauthenticateduser;
