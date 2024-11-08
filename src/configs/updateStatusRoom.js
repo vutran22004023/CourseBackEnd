@@ -2,6 +2,7 @@ import { Zoom } from '../models/zoom.model.js';
 import moment from 'moment';
 import cron from 'node-cron';
 import CacheUtility from '../utils/cache.util.js';
+import logger from '../configs/logger.config.js';
 async function updateCourseStatus() {
   const now = moment();
 
@@ -19,7 +20,7 @@ async function updateCourseStatus() {
     if (now.isAfter(startTime) && now.isBefore(endTime)) {
       if (room.status !== 'in_progress') {
         room.status = 'in_progress';
-        console.log(`Cập nhật phòng họp "${room.title}" thành in_progress`);
+        logger.info(`Cập nhật phòng họp "${room.title}" thành in_progress`);
         await room.save();
         await CacheUtility.clearCache(`/api/videosdk/show-details-zoom/${room._id}`);
         await Promise.all(
@@ -33,7 +34,7 @@ async function updateCourseStatus() {
     } else if (now.isAfter(endTime)) {
       if (room.status !== 'completed') {
         room.status = 'completed';
-        console.log(`Cập nhật phòng họp "${room.title}" thành completed`);
+        logger.info(`Cập nhật phòng họp "${room.title}" thành completed`);
         await room.save();
         await CacheUtility.clearCache(`/api/videosdk/show-details-zoom/${room._id}`);
         await Promise.all(

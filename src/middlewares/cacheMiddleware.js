@@ -1,4 +1,5 @@
 import CacheUtility from '../utils/cache.util.js';
+import logger from '../configs/logger.config.js';
 
 class CacheMiddleware {
   // Lấy dữ liệu từ cache
@@ -14,7 +15,7 @@ class CacheMiddleware {
         next(); // Nếu không có, tiếp tục tới controller
       }
     } catch (error) {
-      console.log('Cache error:', error);
+      logger.error('Cache error:', error);
       next(); // Nếu lỗi, tiếp tục tới controller
     }
   }

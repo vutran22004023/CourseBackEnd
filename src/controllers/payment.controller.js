@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import PayCourse from '../models/paycourse.model.js';
 import i18n from 'i18n';
+import logger from '../configs/logger.config.js';
 
 const payos = new PayOS(`${process.env.CLIENT_ID}`, `${process.env.API_KEY}`, `${process.env.CHECKSUM_KEY}`);
 class PayMentController {
@@ -42,7 +43,7 @@ class PayMentController {
       const paymentLinkInfo = await payos.getPaymentLinkInformation(orderCode);
       return res.status(200).json(paymentLinkInfo);
     } catch (err) {
-      console.log(err.message);
+      logger.error(err.message);
     }
   }
 
@@ -52,7 +53,7 @@ class PayMentController {
       const paymentLinkInfo = await payos.cancelPaymentLink(orderCode);
       return res.status(200).json(paymentLinkInfo);
     } catch (err) {
-      console.log(err.message);
+      logger.error(err.message);
     }
   }
 
@@ -61,7 +62,7 @@ class PayMentController {
       const confirmWebhookPayOs = await payos.confirmWebhook('https://0d6a-14-224-175-102.ngrok-free.app/receive-hook');
       return res.status(200).json(confirmWebhookPayOs);
     } catch (err) {
-      console.log(err.message);
+      logger.error(err.message);
     }
   }
   // end api thanh toans PayOS
@@ -123,7 +124,7 @@ class PayMentController {
         itemid: orderItem.productId,
       });
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
@@ -155,7 +156,8 @@ class PayMentController {
       }
     } catch (ex) {
       result.return_code = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
-      result.return_message = ex.message;
+      result.return_message = 'fail';
+      logger.error(`Zalo callback error: ${ex.message}`);
     }
 
     // thông báo kết quả cho ZaloPay server
@@ -191,7 +193,7 @@ class PayMentController {
       const result = await axios(postConfig);
       return res.status(200).json(result.data);
     } catch (error) {
-      console.log(error.message);
+      logger.error(error.message);
     }
   }
 
@@ -221,8 +223,8 @@ class PayMentController {
 
     axios
       .post(config.endpoint, null, { params })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => logger.info(res.data))
+      .catch((err) => logger.error(err));
   }
 
   async transactionRefundStatus(req, res) {
@@ -243,8 +245,8 @@ class PayMentController {
 
     axios
       .get(config.endpoint, { params })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => logger.info(res.data))
+      .catch((err) => logger.error(err));
   }
 
   // end api thanh toans zalopay
@@ -355,7 +357,7 @@ class PayMentController {
       // Trả về thông báo thành công và dữ liệu đã cập nhật
       return res.status(200).json({ message: i18n.__('payment.updated'), data: updatedPayCourse });
     } catch (err) {
-      console.error('Lỗi khi cập nhật thông tin thanh toán:', err);
+      logger.error('Lỗi khi cập nhật thông tin thanh toán:', err);
       return res.status(500).json({
         message: i18n.__('error.server'),
       });
