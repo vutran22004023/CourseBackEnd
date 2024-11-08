@@ -3,6 +3,8 @@ import { TokenMiddleware } from '../../middlewares/index.js';
 import sendEmailResetPassword from '../../emails/EmailforgotPassword.js';
 import sendEmailAuthenticateuser from '../../emails/Emailauthenticateduser.js';
 import bcrypt from 'bcrypt';
+import i18n from 'i18n';
+import logger from '../../configs/logger.config.js';
 
 function generateRandomPassword(length) {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -31,7 +33,7 @@ const loginUserGoogle = async (data) => {
       });
       return {
         status: 200,
-        message: 'Đăng nhập thành công',
+        message: i18n.__('user.login'),
         id: checkUser._id,
         access_Token,
         refresh_Token,
@@ -49,19 +51,17 @@ const loginUserGoogle = async (data) => {
       if (createdUser) {
         return {
           status: 200,
-          message: 'Đăng ký thành công',
+          message: i18n.__('user.registered'),
           data: {
             ...createdUser._doc,
             password: 'not password',
           },
         };
-      } else {
-        throw new Error('Error creating user');
       }
     }
   } catch (err) {
-    console.error('Error creating user:', err);
-    throw new Error('Tạo người dùng thất bại.');
+    logger.err('Error creating user:', err);
+    throw new Error(i18n.__('error.server'));
   }
 };
 
@@ -74,14 +74,14 @@ const LoginIn = async (user) => {
     if (checkUser === null) {
       return {
         status: 'ERR',
-        message: 'Tài khoản không tồn tại',
+        message: i18n.__('user.not_found'),
       };
     }
     const comparePasswords = bcrypt.compareSync(password, checkUser.password);
     if (!comparePasswords) {
       return {
         status: 'ERR',
-        message: 'Mật khẩu không đúng',
+        message: i18n.__('user.incorrect_password'),
       };
     }
 
@@ -96,21 +96,17 @@ const LoginIn = async (user) => {
       });
       return {
         status: 200,
-        message: 'Đăng nhập thành công',
+        message: i18n.__('user.login'),
         id: checkUser._id,
         access_Token,
         refresh_Token,
       };
-    } else {
-      return {
-        status: 'ERR',
-        message: 'Lỗi không xác định',
-      };
     }
   } catch (err) {
+    logger.error('file: login_registerservice.js:106 ~ err:', err);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -125,7 +121,7 @@ const Register = async (user) => {
     if (checkUser !== null) {
       return {
         status: 'ERR',
-        message: 'Tài Khoản đã tồn tại',
+        message: i18n.__('user.existed'),
       };
     }
     const createdUser = await UserModel.create({
@@ -141,19 +137,18 @@ const Register = async (user) => {
       await sendEmailAuthenticateuser(createdUser, resetToken);
       return {
         status: 200,
-        message: 'Đăng ký thành công',
+        message: i18n.__('user.registered'),
         data: {
           ...createdUser._doc,
           password: 'not password',
         },
       };
-    } else {
-      throw new Error('Tạo người dùng thất bại.');
     }
   } catch (err) {
+    logger.error('file: login_registerservice.js:148 ~ err:', err);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -164,7 +159,7 @@ const forgotPassword = async (email) => {
     if (!user) {
       return {
         status: 'ERR',
-        message: 'Email không tồn tại',
+        message: i18n.__('user.not_exist_email'),
       };
     }
 
@@ -175,12 +170,13 @@ const forgotPassword = async (email) => {
     await sendEmailResetPassword(user, resetToken);
     return {
       status: 200,
-      message: 'Đã gữi form tới email để cài đặt lại mật khẩu.',
+      message: i18n.__('user.reset_password_email_sent'),
     };
   } catch (err) {
+    logger.error('file: login_registerservice.js:176 ~ err:', err);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -191,7 +187,7 @@ const resetPassword = async (id, newPassword) => {
     if (!user) {
       return {
         status: 'ERR',
-        message: 'Người dùng không tồn tại',
+        message: i18n.__('user.not_found'),
       };
     }
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
@@ -200,12 +196,13 @@ const resetPassword = async (id, newPassword) => {
 
     return {
       status: 200,
-      message: 'Đặt lại mật khẩu thành công',
+      message: i18n.__('user.password_reset'),
     };
   } catch (err) {
+    logger.error('file: login_registerservice.js:202 ~ err:', err);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };
@@ -216,19 +213,20 @@ const authenticateUser = async (id, status) => {
     if (!user) {
       return {
         status: 'ERR',
-        message: 'Người dùng không tồn tại',
+        message: i18n.__('user.not_found'),
       };
     }
     user.status = status;
     await user.save();
     return {
       status: 200,
-      message: 'Cập nhập trạng thái thành công',
+      message: i18n.__('user.status_updated'),
     };
   } catch (err) {
+    logger.error('file: login_registerservice.js:226 ~ err:', err);
     return {
       status: 'ERR',
-      message: err,
+      message: i18n.__('error.server'),
     };
   }
 };

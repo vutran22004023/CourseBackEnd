@@ -41,7 +41,14 @@
 		"updated": "Đã cập nhật người dùng ID: {{id}}",
 		"deleted": "Đã xóa người dùng ID: {{id}}",
 		"deleted_many": "Xóa người dùng thành công",
-		"created": "Tạo người dùng thành công!"
+		"created": "Tạo người dùng thành công!",
+		"login": "Đăng nhập thành công!",
+		"registered": "Đăng ký thành công!",
+		"incorrect_password": "Mật khẩu không đúng!",
+		"existed": "Tài khoản đã tồn tại!",
+		"password_reset": "Đặt lại mật khẩu thành công!",
+		"status_updated": "Cập nhập trạng thái thành công!",
+		"reset_password_email_sent": "Đã gữi form tới email để cài đặt lại mật khẩu."
 	},
 	"blog": {
 		"not_found": "Không tìm thấy bài đăng!",
