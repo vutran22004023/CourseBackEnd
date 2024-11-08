@@ -60,5 +60,12 @@
 		"invalid_token": "Token không hợp lệ!",
 		"admin": "Tài khoản không có quyền admin!",
 		"not_found": "Không có token!"
+	},
+	"tournament": {
+		"view_all":"Xem tất cả giải đấu!",
+		"not_found": "Không tìm thấy giải đấu!"
+	},
+	"ranking": {
+		"not_found": "Chưa có xếp hạng!"
 	}
 }

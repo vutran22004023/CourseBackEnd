@@ -1,4 +1,5 @@
 import Tournament from '../../models/tournament.model.js';
+import i18n from 'i18n';
 
 class TournamentService {
   async getAll(limit, page, sort, filter) {
@@ -17,7 +18,7 @@ class TournamentService {
     const allTournaments = await Tournament.find(query, null, options).select('-ranking -description').lean();
     return {
       status: 200,
-      message: 'Xem tất cả giải đấu',
+      message: i18n.__('tournament.view_all'),
       data: allTournaments,
       total: total,
       pageCurrent: Number(page),
@@ -30,7 +31,7 @@ class TournamentService {
     if (!tournament) {
       return {
         status: 'ERR',
-        message: 'Giải đấu không tồn tại',
+        message: i18n.__('tournament.not_found'),
       };
     }
     return {
@@ -47,7 +48,7 @@ class TournamentService {
     if (tournament.end > Date.now() || tournament.ranking.length === 0) {
       return {
         status: 'ERR',
-        message: 'Chưa có xếp hạng!',
+        message: i18n.__('ranking.not_found'),
       };
     }
     return {
