@@ -10,28 +10,55 @@ class MessageController {
     const { courseId, chapterId, videoId, userId, name, avatar, text } = req.body;
 
     try {
+      if (!text || text.trim() === '') {
+        return res.status(400).json({ error: 'Text field is required and cannot be empty.' });
+      }
+
       let courseChat = await CourseChat.findOne({ courseId });
 
       if (!courseChat) {
-        courseChat = new CourseChat({ courseId, chapters: [] });
+        courseChat = new CourseChat({
+          courseId,
+          chapters: [
+            {
+              chapterId,
+              videos: [
+                {
+                  videoId,
+                  messages: [
+                    {
+                      userId,
+                      name,
+                      avatar,
+                      text,
+                      timestamp: new Date(),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      } else {
+        // Tìm hoặc tạo mới chương
+        let chapter = courseChat.chapters.find((ch) => ch.chapterId.toString() === chapterId);
+        if (!chapter) {
+          chapter = { chapterId, videos: [] };
+          courseChat.chapters.push(chapter);
+        }
+
+        let videoChat = chapter.videos.find((vid) => vid.videoId.toString() === videoId);
+        if (!videoChat) {
+          videoChat = { videoId, messages: [] };
+          chapter.videos.push(videoChat);
+        }
+
+        const newMessage = { userId, name, avatar, text, timestamp: new Date() };
+
+        videoChat.messages.push(newMessage);
+
+        courseChat.chapters = courseChat.chapters.map((ch) => (ch.chapterId.toString() === chapterId ? chapter : ch));
       }
-
-      let chapter = courseChat.chapters.find((ch) => ch.chapterId.toString() === chapterId);
-
-      if (!chapter) {
-        chapter = { chapterId, videos: [] };
-        courseChat.chapters.push(chapter);
-      }
-
-      let videoChat = chapter.videos.find((vid) => vid.videoId.toString() === videoId);
-
-      if (!videoChat) {
-        videoChat = { videoId, messages: [] };
-        chapter.videos.push(videoChat);
-      }
-
-      const newMessage = { userId, name, avatar, text, timestamp: new Date() };
-      videoChat.messages.push(newMessage);
 
       await courseChat.save();
 
