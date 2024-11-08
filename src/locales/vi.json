@@ -67,5 +67,10 @@
 	},
 	"ranking": {
 		"not_found": "Chưa có xếp hạng!"
+	},
+	"notification": {
+		"sent": "Gửi thông báo thành công!",
+		"deleted": "Xóa thông báo thành công!",
+		"deleted_all": "Xóa tất cả thông báo thành công!"
 	}
 }

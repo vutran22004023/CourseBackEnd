@@ -1,5 +1,7 @@
 import Notification from '../../models/notification.model.js';
 import admin from '../../configs/firebase_admin.config.js';
+import i18n from 'i18n';
+import logger from '../../configs/logger.config.js';
 
 class NotificationService {
   async send(data) {
@@ -22,13 +24,13 @@ class NotificationService {
       await admin.messaging().send(message);
       return {
         status: 200,
-        message: 'Gửi thông báo thành công',
+        message: i18n.__('notification.sent'),
       };
     } catch (err) {
+      logger.error(`Notification send error: ${err}`);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -39,13 +41,13 @@ class NotificationService {
       return {
         status: 200,
         data: result,
-        message: 'Xóa thông báo thành công!',
+        message: i18n.__('notification.deleted'),
       };
     } catch (err) {
+      logger.error(`Notification delete error: ${err}`);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi!',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -56,13 +58,13 @@ class NotificationService {
       return {
         status: 200,
         data: result,
-        message: 'Xóa thông báo thành công!',
+        message: i18n.__('notification.deleted_all'),
       };
     } catch (err) {
+      logger.error(`Notification send error: ${err}`);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi!',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -83,7 +85,7 @@ class NotificationService {
 
     return {
       status: 200,
-      message: 'Xem tất cả thông báo',
+      message: '',
       data: result,
       total: total,
       pageCurrent: Number(page),
