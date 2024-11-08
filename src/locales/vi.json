@@ -98,5 +98,10 @@
 	"test": {
 		"success": "Bài kiểm tra hoàn thành thành công!",
 		"fail": "Bài kiểm tra chưa hoàn thành. Vui lòng kiểm tra lại các câu sai."
+	},
+	"algorithm": {
+		"not_found":"Không tìm thấy thuật toán!",
+		"correct": "Kết quả chính xác!",
+		"incorrect": "Kết quả sai. Vui lòng kiểm tra lại thuật toán của bạn."
 	}
 }

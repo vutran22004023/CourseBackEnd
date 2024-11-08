@@ -3,6 +3,8 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import evaluateAlgorithm from '../utils/alg.util.js';
 import { TournamentModel } from '../models/index.js';
+import logger from '../configs/logger.config.js';
+import i18n from 'i18n';
 const pythonScriptPath = path.resolve('python', 'generate_problem.py');
 const jsonFilePath = path.resolve('output.json');
 
@@ -10,23 +12,23 @@ class AlgorithmController {
   async generateAlgorithms(req, res) {
     try {
       const command = `python "${pythonScriptPath}"`;
-      console.log('Executing command:', command);
+      logger.info('Executing command:', command);
 
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          console.error(`exec error: ${error.message}`);
-          return res.status(500).send('Server Error');
+          logger.error(`exec error: ${error}`);
+          return res.status(500).send(i18n.__('error.server'));
         }
         if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          return res.status(500).send('Server Error');
+          logger.error(`stderr: ${stderr}`);
+          return res.status(500).send(i18n.__('error.server'));
         }
 
         // Read the JSON file after the Python script has executed
         fs.readFile(jsonFilePath, 'utf8', (readError, data) => {
           if (readError) {
-            console.error(`Error reading JSON file: ${readError.message}`);
-            return res.status(500).send('Error reading JSON file');
+            logger.error(`Error reading JSON file: ${readError}`);
+            return res.status(500).send(i18n.__('error.server'));
           }
 
           try {
@@ -36,16 +38,16 @@ class AlgorithmController {
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(jsonData);
           } catch (parseError) {
-            console.error(`Error parsing JSON data: ${parseError.message}`);
-            res.status(500).send('Error parsing JSON data');
+            logger.error(`Error parsing JSON data: ${parseError}`);
+            res.status(500).send(i18n.__('error.server'));
           }
         });
       });
     } catch (error) {
-      console.error('Lỗi khi gọi script Python:', error.message);
+      logger.error('Lỗi khi gọi script Python:', error);
       res.status(500).json({
         success: false,
-        message: 'Có lỗi xảy ra khi tạo thuật toán.',
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -59,7 +61,7 @@ class AlgorithmController {
 
       const algorithm = algorithms.find((alg) => alg.ten === ten);
       if (!algorithm) {
-        return res.status(404).json({ error: 'Thuật toán không tìm thấy' });
+        return res.status(404).json({ error: i18n.__('algorithm.not_found') });
       }
 
       // Thực thi giải pháp của người dùng
@@ -74,7 +76,7 @@ class AlgorithmController {
         solution: solution,
         result: userResult,
         expected_result: algorithm.result,
-        message: accuracy === 100 ? 'Kết quả chính xác!' : 'Kết quả sai. Vui lòng kiểm tra lại thuật toán của bạn.',
+        message: accuracy === 100 ? i18n.__('algorithm.correct') : i18n.__('algorithm.incorrect'),
       });
       res.json({
         algorithm_name: algorithm.ten,
@@ -82,11 +84,11 @@ class AlgorithmController {
         description: algorithm.mo_ta,
         result: userResult,
         expected_result: algorithm.result,
-        message: accuracy === 100 ? 'Kết quả chính xác!' : 'Kết quả sai. Vui lòng kiểm tra lại thuật toán của bạn.',
+        message: accuracy === 100 ? i18n.__('algorithm.correct') : i18n.__('algorithm.incorrect'),
       });
     } catch (error) {
-      console.error('Error executing solution:', error.message);
-      res.status(500).json({ error: `Lỗi khi thực thi giải pháp: ${error.message}` });
+      logger.error('Error executing solution:', error);
+      res.status(500).json({ error: i18n.__('error.server') });
     }
   }
 }
