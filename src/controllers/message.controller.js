@@ -64,8 +64,9 @@ class MessageController {
       res.status(201).json({ message: 'Message posted successfully.' });
       CacheUtility.clearCache(`/api/message/getMessages`);
     } catch (error) {
-      console.error('Error posting message:', error);
-      res.status(500).json({ error: 'An error occurred while posting the message.' });
+      return res.status(500).json({
+        error: i18n.__('error.server'),
+      });
     }
   }
 
