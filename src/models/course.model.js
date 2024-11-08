@@ -57,7 +57,7 @@ const videoSchema = new mongoose.Schema(
     videoType: {
       type: String,
       required: true,
-      enum: ['video', 'exercise'],
+      enum: ['video', 'exercise', 'videofile'],
     },
     video: {
       type: String,
@@ -67,6 +67,10 @@ const videoSchema = new mongoose.Schema(
         },
         'Chưa có đường dẫn video',
       ],
+      default: null,
+    },
+    videoFile: {
+      type: String,
       default: null,
     },
     file: {
