@@ -2,6 +2,8 @@ import { CourseModel } from '../../models/index.js';
 import 'dotenv/config';
 import { UserCourse } from '../../models/user_course.model.js';
 import PayCourse from '../../models/paycourse.model.js';
+import i18n from 'i18n';
+import logger from '../../configs/logger.config.js';
 
 class UserCourseService {
   async startUserCourse(data) {
@@ -20,7 +22,7 @@ class UserCourseService {
       if (!course) {
         return {
           status: 'ERR',
-          message: 'Khóa học không tồn tại',
+          message: i18n.__('course.not_found'),
         };
       }
 
@@ -41,7 +43,7 @@ class UserCourseService {
           if (!payCourse) {
             return {
               status: 'ERR',
-              message: 'Bạn chưa thanh toán khóa học này',
+              message: i18n.__('course.not_paid'),
             };
           }
         }
@@ -60,7 +62,7 @@ class UserCourseService {
         return {
           status: 200,
           data: userCourse,
-          message: 'Đã lưu tiến độ học',
+          message: i18n.__('user_course.created'),
         };
       }
 
@@ -102,13 +104,13 @@ class UserCourseService {
       return {
         status: 200,
         data: userCourse,
-        message: 'Lấy tiến độ học thành công',
+        message: '',
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:110 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -134,7 +136,7 @@ class UserCourseService {
       if (!userCourse) {
         return {
           status: 'ERR',
-          message: 'Khóa học không tồn tại',
+          message: i18n.__('course.not_found'),
         };
       }
 
@@ -172,7 +174,7 @@ class UserCourseService {
       if (!nextVideo) {
         return {
           status: 200,
-          message: 'Progress updated, but there is no next video',
+          message: i18n.__('user_course.no_next_video'),
           data: userCourse,
         };
       }
@@ -193,14 +195,14 @@ class UserCourseService {
 
       return {
         status: 200,
-        message: 'Progress updated',
+        message: i18n.__('user_course.updated'),
         data: updatedCourse,
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:202 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -234,13 +236,13 @@ class UserCourseService {
       return {
         status: 200,
         data: userCourses,
-        message: 'Lấy tiến độ học thành công',
+        message: '',
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:242 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -264,20 +266,20 @@ class UserCourseService {
       if (!userCourse) {
         return {
           status: 'ERR',
-          message: 'Khóa học không tồn tại',
+          message: i18n.__('course.not_found'),
         };
       }
 
       return {
         status: 200,
-        message: 'Cập nhật ghi chú thành công!',
+        message: i18n.__('note.updated'),
         data: userCourse,
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:279 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -302,20 +304,20 @@ class UserCourseService {
       if (!userCourse) {
         return {
           status: 'ERR',
-          message: 'Khóa học không tồn tại',
+          message: i18n.__('course.not_found'),
         };
       }
 
       return {
         status: 200,
-        message: 'Tạo ghi chú thành công!',
+        message: i18n.__('note.created'),
         data: userCourse,
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:317 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -337,7 +339,7 @@ class UserCourseService {
       if (!userCourse) {
         return {
           status: 'ERR',
-          message: 'Khóa học không tồn tại',
+          message: i18n.__('course.not_found'),
         };
       }
 
@@ -363,7 +365,7 @@ class UserCourseService {
       if (notes.length === 0) {
         return {
           status: 200,
-          message: 'Không có ghi chú nào!',
+          message: i18n.__('note.not_found'),
           currentPage: pageNumber,
           totalPages: 0,
           totalNotes: 0,
@@ -385,17 +387,17 @@ class UserCourseService {
 
       return {
         status: 200,
-        message: 'Lấy tất cả ghi chú thành công!',
+        message: '',
         currentPage: pageNumber,
         totalPages: Math.ceil(notes.length / pageSize),
         totalNotes: notes.length,
         data: paginatedNotes,
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:397 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -419,20 +421,20 @@ class UserCourseService {
       if (!userCourse) {
         return {
           status: 'ERR',
-          message: 'Khóa học không tồn tại',
+          message: i18n.__('course.not_found'),
         };
       }
 
       return {
         status: 200,
-        message: 'Xóa ghi chú thành công!',
+        message: i18n.__('note.deleted'),
         data: userCourse,
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:434 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'Đã xảy ra lỗi',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -445,7 +447,7 @@ class UserCourseService {
       if (rating < 0 || rating > 5) {
         return {
           status: 'ERR',
-          message: 'Rating must be between 0 and 5',
+          message: i18n.__('course.invalid_rating'),
         };
       }
 
@@ -465,20 +467,20 @@ class UserCourseService {
       if (!userCourse) {
         return {
           status: 'ERR',
-          message: 'Course not found',
+          message: i18n.__('course.not_found'),
         };
       }
 
       return {
         status: 200,
-        message: 'Rating updated successfully!',
+        message: i18n.__('course.rating_updated'),
         data: userCourse,
       };
     } catch (err) {
+      logger.error('file: user_course.service.js:480 ~ err:', err);
       return {
         status: 'ERR',
-        message: 'An error occurred',
-        error: err.message,
+        message: i18n.__('error.server'),
       };
     }
   }
@@ -486,7 +488,7 @@ class UserCourseService {
   async checkAnswers(data) {
     const { courseId, chapterId, videoId, quizAnswers } = data;
     if (!quizAnswers || !Array.isArray(quizAnswers)) {
-      return { status: 400, message: 'Invalid input' };
+      return { status: 400, message: i18n.__('error.bad_request') };
     }
     try {
       const course = await CourseModel.findById({
@@ -495,11 +497,11 @@ class UserCourseService {
         'chapters.videos._id': videoId,
       });
       if (!course) {
-        return { status: 404, message: 'Course not found' };
+        return { status: 404, message: i18n.__('course.not_found') };
       }
       const chapter = course.chapters[0];
       const video = chapter.videos.find((v) => v._id.toString() === videoId);
-      if (!video) return { status: 404, message: 'Video not found' };
+      if (!video) return { status: 404, message: i18n.__('video.not_found') };
 
       let results = quizAnswers.map((qa) => {
         const quiz = video.quiz.find((q) => q._id.toString() === qa.id);
@@ -513,7 +515,7 @@ class UserCourseService {
       if (incorrectAnswers === 0) {
         return {
           status: 'success',
-          message: 'Bài kiểm tra hoàn thành thành công!',
+          message: i18n.__('test.success'),
           totalQuestions,
           incorrectAnswers: 0,
           results: results,
@@ -521,15 +523,18 @@ class UserCourseService {
       } else {
         return {
           status: 'fail',
-          message: 'Bài kiểm tra chưa hoàn thành. Vui lòng kiểm tra lại các câu sai.',
+          message: i18n.__('test.fail'),
           totalQuestions,
           incorrectAnswers,
           results: results,
         };
       }
     } catch (error) {
-      console.error(error);
-      return { status: 500, message: 'Internal server error' };
+      logger.error('file: user_course.service.js:533 ~ error:', error);
+      return {
+        status: 500,
+        message: i18n.__('error.server'),
+      };
     }
   }
 }

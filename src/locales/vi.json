@@ -18,7 +18,9 @@
 		"duplicate_slug": "Slug video trong các chương bị trùng lặp!",
 		"missing_slug": "Thiếu slug!",
 		"namel": "khóa học",
-		"existed": "Đã có {{field}} {{value}}"
+		"existed": "Đã có {{field}} {{value}}",
+		"invalid_rating": "Đánh giá phải trong khoảng từ 0 đến 5",
+		"rating_updated": "Đã cập nhật đánh giá!"
 	},
 	"chapter": {
 		"not_found": "Không tìm thấy chương!"
@@ -81,5 +83,20 @@
 		"sent": "Gửi thông báo thành công!",
 		"deleted": "Xóa thông báo thành công!",
 		"deleted_all": "Xóa tất cả thông báo thành công!"
+	},
+	"user_course": {
+		"created":"Đã lưu tiến độ học!",
+		"no_next_video": "Tiến độ học cập nhật thành công! Không còn video tiếp theo!",
+		"updated": "Cập nhật tiến độ học thành công!"
+	},
+	"note": {
+		"created":"Đã lưu ghi chú!",
+		"updated": "Cập nhật ghi chú thành công!",
+		"deleted": "Xóa ghi chú thành công!",
+		"not_found":"Không tìm thấy ghi chú!"
+	},
+	"test": {
+		"success": "Bài kiểm tra hoàn thành thành công!",
+		"fail": "Bài kiểm tra chưa hoàn thành. Vui lòng kiểm tra lại các câu sai."
 	}
 }
