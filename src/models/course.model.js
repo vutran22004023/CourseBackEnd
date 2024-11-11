@@ -1,22 +1,23 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
+import i18n from 'i18n';
 
 // Define schema for multiple-choice questions
 const questionSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Câu hỏi không có tiêu đề'],
+    required: [true, i18n.__('course.missing_question_title')],
   },
   options: {
     type: [
       {
         label: {
           type: String,
-          required: [true, 'Chưa có nhãn cho đáp án'],
+          required: [true, i18n.__('course.missing_answer_label')],
         },
         text: {
           type: String,
-          required: [true, 'Chưa có nội dung cho đáp án'],
+          required: [true, i18n.__('course.missing_answer')],
         },
       },
     ],
@@ -25,25 +26,25 @@ const questionSchema = new mongoose.Schema({
         validator: function (arr) {
           return arr.length >= 2; // Ensure at least two answer options
         },
-        message: 'Phải có ít nhất hai đáp án',
+        message: i18n.__('course.more_answer'),
       },
       {
         validator: function (arr) {
           const labels = arr.map((option) => option.label);
           return labels.length === new Set(labels).size;
         },
-        message: 'Các nhãn đáp án phải là duy nhất',
+        message: i18n.__('course.unique_answer_label'),
       },
     ],
   },
   correctAnswer: {
     type: String,
-    required: [true, 'Chưa có câu trả lời đúng'],
+    required: [true, i18n.__('course.missing_correct_answer')],
     validate: {
       validator: function (value) {
         return this.options.some((option) => option.label === value);
       },
-      message: 'Câu trả lời đúng phải khớp với một trong các nhãn đáp án',
+      message: i18n.__('course.missing_correct_answer_label'),
     },
   },
 });
@@ -51,8 +52,8 @@ const videoSchema = new mongoose.Schema(
   {
     childname: {
       type: String,
-      maxLength: [255, 'Tiêu đề video quá dài'],
-      required: [true, 'Chưa có tiêu đề video'],
+      maxLength: [255, i18n.__('video.title_too_long')],
+      required: [true, i18n.__('video.missing_title')],
     },
     videoType: {
       type: String,
@@ -65,7 +66,7 @@ const videoSchema = new mongoose.Schema(
         function () {
           return this.videoType === 'video';
         },
-        'Chưa có đường dẫn video',
+        i18n.__('video.missing_link'),
       ],
       default: null,
     },
@@ -105,8 +106,8 @@ const chapterSchema = new mongoose.Schema(
   {
     namechapter: {
       type: String,
-      maxLength: [255, 'Tiêu đề chương quá dài'],
-      required: [true, 'Chưa có tiêu đề chương'],
+      maxLength: [255, i18n.__('chapter.title_too_long')],
+      required: [true, i18n.__('chapter.missing_title')],
     },
     videos: [videoSchema],
   },
@@ -119,8 +120,8 @@ const courseSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      maxLength: [255, 'Tiêu đề khóa học quá dài'],
-      required: [true, 'Chưa có tiêu đề khóa học'],
+      maxLength: [255, i18n.__('course.title_too_long')],
+      required: [true, i18n.__('course.missing_title')],
     },
     description: {
       type: String,
@@ -128,7 +129,7 @@ const courseSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      maxLength: [255, 'Đường dẫn hình ảnh vượt quá 255 ký tự'],
+      maxLength: [255, i18n.__('course.image_link_too_long')],
       default: null,
     },
     video: {
@@ -138,8 +139,8 @@ const courseSchema = new mongoose.Schema(
     chapters: [chapterSchema],
     price: {
       type: String,
-      required: [true, 'Chưa chọn loại khóa học'],
-      enum: { values: ['free', 'paid'], message: 'Loại khóa học chỉ cho phép giá trị free hoặc paid' },
+      required: [true, i18n.__('course.missing_type')],
+      enum: { values: ['free', 'paid'], message: i18n.__('course.type_limit') },
     },
     priceAmount: {
       type: Number,
@@ -147,13 +148,13 @@ const courseSchema = new mongoose.Schema(
         function () {
           return this.price === 'paid';
         },
-        'Chưa có số tiền',
+        i18n.__('course.missing_price'),
       ],
     },
     slug: {
       type: String,
       unique: true,
-      required: [true, 'Chưa có slug của khóa học'],
+      required: [true, i18n.__('course.missing_slug')],
     },
     view: {
       type: Number,

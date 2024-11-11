@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { PayCourse, CourseModel, UserModel } from '../models/index.js'; // Import models
+import i18n from 'i18n';
+import logger from '../configs/logger.config.js';
 
 class AlgorithmController {
   async getAnalyticCourse(req, res) {
@@ -160,8 +162,8 @@ class AlgorithmController {
         topCourses, // Danh sách top khóa học
       });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
+      logger.error(err);
+      res.status(500).json({ error: i18n.__('error.server') });
     }
   }
 }

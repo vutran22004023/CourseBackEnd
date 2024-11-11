@@ -1,5 +1,141 @@
 {
 	"error": {
-		"invalid_url": "Invalid url!"
+		"invalid_id": "Invalid ID!",
+		"bad_request": "Missing or invalid information!",
+		"server": "Server encountered an error!",
+		"forbidden": "You do not have permission to perform this action!",
+		"not_found": "Page not found!",
+		"invalid_page_number": "Invalid page number!"
+	},
+	"course": {
+		"not_found": "Course not found!",
+		"deleted": "Deleted course with ID: {{id}}",
+		"view_all": "View all courses!",
+		"not_paid": "Course not paid!",
+		"created": "Course created successfully!",
+		"updated": "Updated course with ID: {{id}}",
+		"existed_slug": "Slug '{{slug}}' already exists",
+		"duplicate_slug": "Duplicate video slug in chapters!",
+		"missing_slug": "Missing slug!",
+		"namel": "course",
+		"existed": "{{field}} {{value}} already exists",
+		"invalid_rating": "Rating must be between 0 and 5",
+		"rating_updated": "Rating updated!",
+		"missing_question_title": "Question missing title",
+		"missing_answer_label": "Answer label missing",
+		"missing_answer": "Answer content missing",
+		"more_answer": "At least two answers required",
+		"unique_answer_label": "Answer labels must be unique",
+		"missing_correct_answer": "Correct answer missing",
+		"missing_correct_answer_label": "Correct answer label must match one of the answer labels",
+		"title_too_long": "Course title is too long",
+		"missing_title": "Course title missing",
+		"image_link_too_long": "Image link exceeds 255 characters",
+		"missing_type": "Course type not selected",
+		"type_limit": "Course type can only be 'free' or 'paid'",
+		"missing_price": "Price missing"
+	},
+	"chapter": {
+		"not_found": "Chapter not found!",
+		"title_too_long": "Chapter title is too long",
+		"missing_title": "Chapter title missing"
+	},
+	"video": {
+		"not_found": "Video not found!",
+		"title_too_long": "Video title is too long",
+		"missing_title": "Video title missing",
+		"missing_link": "Video link missing"
+	},
+	"user": {
+		"not_found": "User not found!",
+		"auth_error": "User authentication error!",
+		"incorrect_email": "Email is incorrect!",
+		"incorrect_confirm_password": "Passwords do not match!",
+		"not_exist_email": "Email does not exist!",
+		"logout": "Logout successful!",
+		"missing_email": "Email missing!",
+		"view_all": "View all users",
+		"detail": "User information for ID: {{id}}",
+		"updated": "User updated with ID: {{id}}",
+		"deleted": "Deleted user with ID: {{id}}",
+		"deleted_many": "Users deleted successfully",
+		"created": "User created successfully!",
+		"login": "Login successful!",
+		"registered": "Registration successful!",
+		"incorrect_password": "Password is incorrect!",
+		"existed": "Account already exists!",
+		"password_reset": "Password reset successful!",
+		"status_updated": "Status updated successfully!",
+		"reset_password_email_sent": "Reset password form sent to email."
+	},
+	"blog": {
+		"not_found": "Blog post not found!",
+		"deleted": "Deleted post with ID: {{id}}",
+		"view_all": "View all posts!",
+		"created": "Post created successfully!",
+		"updated": "Updated post with ID: {{id}}",
+		"existed_slug": "Slug '{{slug}}' already exists"
+	},
+	"infor_page": {
+		"not_found": "Information page not found!"
+	},
+	"message": {
+		"sent": "Message sent successfully!",
+		"updated": "Message updated successfully!",
+		"not_found": "Message not found!",
+		"deleted": "Message deleted successfully!"
+	},
+	"payment": {
+		"success": "Payment successful!",
+		"updated": "Payment information updated successfully!",
+		"not_found": "Payment information not found!",
+		"deleted": "Payment information deleted successfully!",
+		"paid": "Course has been paid for!"
+	},
+	"auth": {
+		"invalid_token": "Invalid token!",
+		"admin": "Account lacks admin privileges!",
+		"not_found": "Token not found!"
+	},
+	"tournament": {
+		"view_all": "View all tournaments!",
+		"not_found": "Tournament not found!"
+	},
+	"ranking": {
+		"not_found": "No ranking found!"
+	},
+	"notification": {
+		"sent": "Notification sent successfully!",
+		"deleted": "Notification deleted successfully!",
+		"deleted_all": "All notifications deleted successfully!"
+	},
+	"user_course": {
+		"created": "Learning progress saved!",
+		"no_next_video": "Learning progress updated! No more videos!",
+		"updated": "Learning progress updated successfully!"
+	},
+	"note": {
+		"created": "Note saved!",
+		"updated": "Note updated successfully!",
+		"deleted": "Note deleted successfully!",
+		"not_found": "Note not found!"
+	},
+	"test": {
+		"success": "Test completed successfully!",
+		"fail": "Test not completed. Please check the incorrect answers."
+	},
+	"algorithm": {
+		"not_found": "Algorithm not found!",
+		"correct": "Correct result!",
+		"incorrect": "Incorrect result. Please check your algorithm."
+	},
+	"room": {
+		"token_error": "Error generating token!",
+		"id_error": "Error creating room!",
+		"created": "Room created successfully!",
+		"not_found": "Room not found!",
+		"got": "Room retrieved successfully!",
+		"deleted": "Room deleted successfully!",
+		"updated": "Room updated successfully!"
 	}
 }

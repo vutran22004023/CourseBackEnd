@@ -125,7 +125,7 @@ class PayMentController {
       });
     } catch (err) {
       logger.error(err);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: i18n.__('error.server') });
     }
   }
 
@@ -157,7 +157,7 @@ class PayMentController {
     } catch (ex) {
       result.return_code = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
       result.return_message = 'fail';
-      logger.error(`Zalo callback error: ${ex.message}`);
+      logger.error(`Zalo callback error: ${ex}`);
     }
 
     // thông báo kết quả cho ZaloPay server
