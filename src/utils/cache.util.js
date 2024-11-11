@@ -1,4 +1,5 @@
 import redisClient from '../configs/redisClient.config.js';
+import logger from '../configs/logger.config.js';
 
 class CacheUtility {
   // Lấy dữ liệu từ cache
@@ -6,7 +7,7 @@ class CacheUtility {
     try {
       return await redisClient.get(key); // Lấy dữ liệu từ Redis
     } catch (error) {
-      console.log('Cache error:', error);
+      logger.error('Cache error:', error);
     }
   }
 
@@ -16,7 +17,7 @@ class CacheUtility {
     try {
       await redisClient.set(key, JSON.stringify(data), 'EX', expiration); // Lưu vào Redis với thời gian sống
     } catch (error) {
-      console.log('Cache set error:', error);
+      logger.error('Cache set error:', error);
     }
   }
 
@@ -25,7 +26,7 @@ class CacheUtility {
     try {
       await redisClient.set(key, JSON.stringify(data), 'EX', expiration); // Ghi đè cache với key tương ứng
     } catch (error) {
-      console.log('Cache update error:', error);
+      logger.error('Cache update error:', error);
     }
   }
 
@@ -33,7 +34,7 @@ class CacheUtility {
     try {
       await redisClient.del(key); // Xóa cache theo key
     } catch (error) {
-      console.log('Cache clear error:', error);
+      logger.error('Cache clear error:', error);
     }
   }
 }
