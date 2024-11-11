@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import { Zoom } from '../models/zoom.model.js';
 import { UserModel } from '../models/index.js';
 import CacheUtility from '../utils/cache.util.js';
+import i18n from 'i18n';
+import logger from '../configs/logger.config.js';
 
 const API_KEY = process.env.VIDEOSDK_API_KEY;
 const SECRET = process.env.VIDEOSDK_SECRET_KEY;
@@ -38,11 +40,10 @@ const createRoomVideoSDK = async (createToken) => {
     );
     return axiosResponse.data;
   } catch (error) {
-    console.error('Error creating meeting:', error);
+    logger.error('Error creating meeting:', error);
     const errorResponse = {
       status: 200,
-      message: 'Internal Server Error',
-      error: error.message || 'An unexpected error occurred.',
+      message: i18n.__('error.server'),
     };
     throw new Error(JSON.stringify(errorResponse));
   }
@@ -62,11 +63,10 @@ const DeactivateRoomVideoSDK = async (token, roomId) => {
     );
     return axiosResponse;
   } catch (error) {
-    console.error('Error creating meeting:', error);
+    logger.error('Error creating meeting:', error);
     const errorResponse = {
       status: 200,
-      message: 'Internal Server Error',
-      error: error.message || 'An unexpected error occurred.',
+      message: i18n.__('error.server'),
     };
     throw new Error(JSON.stringify(errorResponse));
   }
@@ -82,7 +82,7 @@ class VideoSDKController {
       if (!createToken) {
         return res.status(200).json({
           status: 400,
-          message: 'Error generating token',
+          message: i18n.__('room.token_error'),
         });
       }
 
@@ -91,7 +91,7 @@ class VideoSDKController {
       if (!createIdZoom) {
         return res.status(200).json({
           status: 400,
-          message: 'Error creating room, no roomId returned',
+          message: i18n.__('room.id_error'),
         });
       }
 
@@ -118,13 +118,13 @@ class VideoSDKController {
       await CacheUtility.clearCache(`/api/videosdk/show-user-teacher-zoom/${userIdZoom}`);
       return res.status(200).json({
         status: 200,
-        message: 'Room created and saved successfully',
+        message: i18n.__('room.created'),
       });
     } catch (error) {
+      logger.error('file: videosdk.controller.js:124 ~ error:', error);
       return res.status(200).json({
         status: 500,
-        message: 'Internal Server Error',
-        error: error.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -136,7 +136,7 @@ class VideoSDKController {
       if (rooms.length === 0) {
         return res.status(200).json({
           status: 404,
-          message: 'No rooms found for this user.',
+          message: i18n.__('room.not_found'),
         });
       }
       const userTeacher = await UserModel.findOne({ _id: userIdZoom });
@@ -144,7 +144,7 @@ class VideoSDKController {
       if (!userTeacher) {
         return res.status(404).json({
           status: 404,
-          message: 'User not found.',
+          message: i18n.__('user.not_found'),
         });
       }
 
@@ -164,7 +164,7 @@ class VideoSDKController {
       }));
       await CacheUtility.setCache(cacheKey, {
         status: 200,
-        message: 'Rooms retrieved successfully',
+        message: i18n.__('room.got'),
         data: {
           rooms: roomsWithStudents,
           teacher: {
@@ -176,7 +176,7 @@ class VideoSDKController {
       });
       return res.status(200).json({
         status: 200,
-        message: 'Rooms retrieved successfully',
+        message: i18n.__('room.got'),
         data: {
           rooms: roomsWithStudents,
           teacher: {
@@ -187,10 +187,10 @@ class VideoSDKController {
         },
       });
     } catch (err) {
+      logger.error('file: videosdk.controller.js:190 ~ err:', err);
       return res.status(200).json({
         status: 500,
-        message: 'Internal Server Error',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -205,7 +205,7 @@ class VideoSDKController {
       if (rooms.length === 0) {
         return res.status(200).json({
           status: 404,
-          message: 'No rooms found for this student.',
+          message: i18n.__('room.not_found'),
         });
       }
 
@@ -244,7 +244,7 @@ class VideoSDKController {
       }));
       await CacheUtility.setCache(cacheKey, {
         status: 200,
-        message: 'Rooms retrieved successfully',
+        message: i18n.__('room.got'),
         data: {
           rooms: roomsWithDetails,
           teacher: {
@@ -254,16 +254,16 @@ class VideoSDKController {
       });
       return res.status(200).json({
         status: 200,
-        message: 'Rooms retrieved successfully',
+        message: i18n.__('room.got'),
         data: {
           rooms: roomsWithDetails,
         },
       });
     } catch (err) {
+      logger.error('file: videosdk.controller.js:263 ~ err:', err);
       return res.status(500).json({
         status: 500,
-        message: 'Internal Server Error',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -276,24 +276,24 @@ class VideoSDKController {
       if (!rooms) {
         return res.status(200).json({
           status: 404,
-          message: 'No rooms found for this student.',
+          message: i18n.__('room.not_found'),
         });
       }
       await CacheUtility.setCache(cacheKey, {
         status: 200,
-        message: 'Rooms retrieved successfully',
+        message: i18n.__('room.got'),
         data: rooms,
       });
       return res.status(200).json({
         status: 200,
-        message: 'Rooms retrieved successfully',
+        message: i18n.__('room.got'),
         data: rooms,
       });
     } catch (err) {
+      logger.error('file: videosdk.controller.js:293 ~ err:', err);
       return res.status(500).json({
         status: 500,
-        message: 'Internal Server Error',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -306,7 +306,7 @@ class VideoSDKController {
       if (!existingRoom) {
         return res.status(404).json({
           status: 404,
-          message: 'Room not found',
+          message: i18n.__('room.not_found'),
         });
       }
       existingRoom.status = status || existingRoom.status;
@@ -329,13 +329,13 @@ class VideoSDKController {
       await CacheUtility.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
       return res.status(200).json({
         status: 200,
-        message: 'Room updated successfully',
+        message: i18n.__('room.updated'),
       });
     } catch (err) {
+      logger.error('file: videosdk.controller.js:335 ~ err:', err);
       return res.status(500).json({
         status: 500,
-        message: 'Internal Server Error',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
@@ -347,7 +347,7 @@ class VideoSDKController {
       if (!existingRoom) {
         return res.status(404).json({
           status: 404,
-          message: 'Room not found',
+          message: i18n.__('room.not_found'),
         });
       }
       await DeactivateRoomVideoSDK(existingRoom?.token, existingRoom?.roomDetails?.roomId);
@@ -362,13 +362,13 @@ class VideoSDKController {
       await CacheUtility.clearCache(`/api/videosdk/show-user-teacher-zoom/${existingRoom?.userIdZoom}`);
       return res.status(200).json({
         status: 200,
-        message: 'Room deleted successfully',
+        message: i18n.__('room.deleted'),
       });
     } catch (err) {
+      logger.error('file: videosdk.controller.js:368 ~ err:', err);
       return res.status(500).json({
         status: 500,
-        message: 'Internal Server Error',
-        error: err.message,
+        message: i18n.__('error.server'),
       });
     }
   }
