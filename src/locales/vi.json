@@ -20,13 +20,31 @@
 		"namel": "khóa học",
 		"existed": "Đã có {{field}} {{value}}",
 		"invalid_rating": "Đánh giá phải trong khoảng từ 0 đến 5",
-		"rating_updated": "Đã cập nhật đánh giá!"
+		"rating_updated": "Đã cập nhật đánh giá!",
+		"missing_question_title": "Câu hỏi không có tiêu đề",
+		"missing_answer_label": "Chưa có nhãn cho đáp án",
+		"missing_answer": "Chưa có nội dung cho đáp án",
+		"more_answer": "Phải có ít nhất hai đáp án",
+		"unique_answer_label": "Các nhãn đáp án phải là duy nhất",
+		"missing_correct_answer": "Chưa có câu trả lời đúng",
+		"missing_correct_answer_label": "Câu trả lời đúng phải khớp với một trong các nhãn đáp án",
+		"title_too_long": "Tiêu đề khóa học quá dài",
+		"missing_title": "Chưa có tiêu đề khóa học",
+		"image_link_too_long": "Đường dẫn hình ảnh vượt quá 255 ký tự",
+		"missing_type": "Chưa chọn loại khóa học",
+		"type_limit": "Loại khóa học chỉ cho phép giá trị free hoặc paid",
+		"missing_price": "Chưa có số tiền"
 	},
 	"chapter": {
-		"not_found": "Không tìm thấy chương!"
+		"not_found": "Không tìm thấy chương!",
+		"title_too_long": "Tiêu đề chương quá dài",
+		"missing_title": "Chưa có tiêu đề chương"
 	},
 	"video": {
-		"not_found": "Không tìm thấy video!"
+		"not_found": "Không tìm thấy video!",
+		"title_too_long": "Tiêu đề video quá dài",
+		"missing_title": "Chưa có tiêu đề video",
+		"missing_link": "Chưa có đường dẫn video"
 	},
 	"user": {
 		"not_found": "Không tìm thấy người dùng!",
