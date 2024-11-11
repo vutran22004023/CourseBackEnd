@@ -110,5 +110,14 @@
 		"not_found":"Không tìm thấy thuật toán!",
 		"correct": "Kết quả chính xác!",
 		"incorrect": "Kết quả sai. Vui lòng kiểm tra lại thuật toán của bạn."
+	},
+	"room": {
+		"token_error": "Đã xảy ra lỗi khi tạo token!",
+		"id_error": "Đã xảy ra lỗi khi tạo phòng!",
+		"created": "Tạo phòng thành công!",
+		"not_found": "Không tìm thấy phòng!",
+		"got": "Lấy phòng thành công!",
+		"deleted": "Xóa phòng thành công!",
+		"updated": "Cập nhật phòng thành công!"
 	}
 }
