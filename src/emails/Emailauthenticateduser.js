@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
-import logger from '../configs/logger.config';
+import logger from '../configs/logger.config.js';
 
 const Emailauthenticateduser = async (user, resetToken) => {
   // đương dẫn client tới chỗ input nhập lại mật khẩu

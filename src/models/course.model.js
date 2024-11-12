@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
-import i18n from 'i18n';
+import i18n from '../configs/i18n.config.js';
 
 // Define schema for multiple-choice questions
 const questionSchema = new mongoose.Schema({
@@ -54,6 +54,9 @@ const videoSchema = new mongoose.Schema(
       type: String,
       maxLength: [255, i18n.__('video.title_too_long')],
       required: [true, i18n.__('video.missing_title')],
+    },
+    childnameEN: {
+      type: String,
     },
     videoType: {
       type: String,
@@ -109,6 +112,9 @@ const chapterSchema = new mongoose.Schema(
       maxLength: [255, i18n.__('chapter.title_too_long')],
       required: [true, i18n.__('chapter.missing_title')],
     },
+    namechapterEN: {
+      type: String,
+    },
     videos: [videoSchema],
   },
   {
@@ -122,6 +128,9 @@ const courseSchema = new mongoose.Schema(
       type: String,
       maxLength: [255, i18n.__('course.title_too_long')],
       required: [true, i18n.__('course.missing_title')],
+    },
+    nameEN: {
+      type: String,
     },
     description: {
       type: String,
