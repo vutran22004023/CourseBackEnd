@@ -8,6 +8,7 @@ import PayCourse from '../../models/paycourse.model.js';
 import { UserCourse } from '../../models/user_course.model.js';
 import i18n from 'i18n';
 import logger from '../../configs/logger.config.js';
+import Translate from '../../utils/translate.util.js';
 
 class CourseService {
   async getAllCourses(limit, page, sort, filter) {
@@ -147,6 +148,7 @@ class CourseService {
         // Update existed chapters
         if (dbChapter) {
           dbChapter.namechapter = chapter.namechapter;
+          dbChapter.namechapterEN = chapter.namechapterEN;
 
           // Handle when delete videos
           dbChapter.videos = dbChapter.videos.filter((video) =>
@@ -162,6 +164,7 @@ class CourseService {
 
               if (dbVideo) {
                 dbVideo.childname = reqVideo.childname;
+                dbVideo.childnameEN = reqVideo.childnameEN;
                 dbVideo.video = reqVideo.video;
                 dbVideo.time = reqVideo.time;
                 dbVideo.slug = reqVideo.slug;
@@ -179,6 +182,7 @@ class CourseService {
 
       // Update course
       course.name = reqData.name;
+      course.nameEN = reqData.nameEN;
       course.description = reqData.description;
       course.price = reqData.price;
       course.priceAmount = reqData.priceAmount;
@@ -240,6 +244,24 @@ class CourseService {
       }
     });
 
+    // Translate course name
+    if (data.name) {
+      let lang = await Translate.detectLanguage(data.name);
+      switch (lang) {
+        case 'vi':
+          data.nameEN = await Translate.translateText(data.name, 'vi', 'en');
+          break;
+        case 'en':
+          data.nameEN = data.name;
+          data.name = await Translate.translateText(data.name, 'en', 'vi');
+          break;
+        default:
+          data.nameEN = await Translate.translateText(data.name, lang, 'en');
+          data.name = await Translate.translateText(data.nameEN, 'en', 'vi');
+          break;
+      }
+    }
+
     let totalVideos = 0;
     let totalTime = moment.duration();
 
@@ -262,6 +284,42 @@ class CourseService {
             video.time = time.format('hh:mm:ss');
             totalTime.add(time);
           }
+        }
+
+        // Translate video name
+        if (video.childname) {
+          let lang = await Translate.detectLanguage(video.childname);
+          switch (lang) {
+            case 'vi':
+              video.childnameEN = await Translate.translateText(video.childname, 'vi', 'en');
+              break;
+            case 'en':
+              video.childnameEN = video.childname;
+              video.childname = await Translate.translateText(video.childname, 'en', 'vi');
+              break;
+            default:
+              video.childnameEN = await Translate.translateText(video.childname, lang, 'en');
+              video.childname = await Translate.translateText(video.childnameEN, 'en', 'vi');
+              break;
+          }
+        }
+      }
+
+      // Translate chapter name
+      if (chapter.namechapter) {
+        let lang = await Translate.detectLanguage(chapter.namechapter);
+        switch (lang) {
+          case 'vi':
+            chapter.namechapterEN = await Translate.translateText(chapter.namechapter, 'vi', 'en');
+            break;
+          case 'en':
+            chapter.namechapterEN = chapter.namechapter;
+            chapter.namechapter = await Translate.translateText(chapter.namechapter, 'en', 'vi');
+            break;
+          default:
+            chapter.namechapterEN = await Translate.translateText(chapter.namechapter, lang, 'en');
+            chapter.namechapter = await Translate.translateText(chapter.namechapterEN, 'en', 'vi');
+            break;
         }
       }
     }
