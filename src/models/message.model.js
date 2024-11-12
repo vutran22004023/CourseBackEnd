@@ -1,28 +1,31 @@
 import mongoose from 'mongoose';
 
-const messageSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const messageSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    avatar: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  avatar: {
-    type: String,
-    required: true,
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-}, { _id: false });
+  { _id: false }
+);
 
 const videoChatSchema = new mongoose.Schema(
   {
