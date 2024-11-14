@@ -14,7 +14,7 @@ try {
     credential: admin.credential.cert(serviceAccount),
   });
 } catch (err) {
-  logger.error(err);
+  logger.error("file: firebase_admin.config.js:17 ~ err:", err);
 }
 
 export default admin;
