@@ -3,6 +3,7 @@ import axios from 'axios';
 dotenv.config();
 import jwt from 'jsonwebtoken';
 import { Zoom } from '../models/zoom.model.js';
+import { Payment } from '../models/paymentRoom.model.js';
 import { UserModel } from '../models/index.js';
 import CacheUtility from '../utils/cache.util.js';
 import i18n from 'i18n';
@@ -76,15 +77,7 @@ const DeactivateRoomVideoSDK = async (token, roomId) => {
 class VideoSDKController {
   async createRoomZoom(req, res) {
     try {
-      const { title, startTime, endTime, userIdZoom, permissions } = req.body;
-
-      const createToken = createTokenVideoSDK(permissions, userIdZoom);
-      if (!createToken) {
-        return res.status(200).json({
-          status: 400,
-          message: i18n.__('room.token_error'),
-        });
-      }
+      const { title, startTime, endTime, userIdZoom, price, statusPrice, timeRoom } = req.body;
 
       const createIdZoom = await createRoomVideoSDK(createToken);
 
@@ -100,10 +93,11 @@ class VideoSDKController {
         title,
         startTime,
         endTime,
-        token: createToken,
         roomDetails: createIdZoom,
-        permissions,
         status: 'not_started',
+        price,
+        statusPrice,
+        timeRoom
       });
 
       await newZoom.save();
@@ -350,7 +344,6 @@ class VideoSDKController {
           message: i18n.__('room.not_found'),
         });
       }
-      await DeactivateRoomVideoSDK(existingRoom?.token, existingRoom?.roomDetails?.roomId);
       await Zoom.findByIdAndDelete(id);
       await CacheUtility.clearCache(`/api/videosdk/show-details-zoom/${id}`);
       await Promise.all(
@@ -372,6 +365,46 @@ class VideoSDKController {
       });
     }
   }
+
+  async johnRoom(req, res) {
+    try {
+      const { id } = req.params;
+      const { userId } = req.body;
+      const existingRoom = await Zoom.findById(id);
+      if (!existingRoom) {
+        return res.status(404).json({
+          status: 404,
+          message: i18n.__('room.not_found'),
+        });
+      }
+      if (existingRoom.statusPrice === 'free') {
+        await Zoom.findByIdAndUpdate(id, { $addToSet: { permissions: userId } }, { new: true });
+        return res.status(200).json({
+          status: 200,
+          message: i18n.__('room.permissions_updated'),
+        });
+      }else if (existingRoom.statusPrice === 'paid') {
+        const payment = new Payment({
+          userId,
+          roomId: id,
+          amount: existingRoom.price, 
+          status: 'pending',
+        });
+        await payment.save();
+
+        return res.status(200).json({
+          status: 200,
+          message: i18n.__('room.permissions_updated'),
+        });
+      }
+    }catch(e) {
+      logger.error('file: videosdk.controller.js:368 ~ err:', err);
+      return res.status(500).json({
+        status: 500,
+        message: i18n.__('error.server'),
+      });
+    }
+}
 }
 
 export default new VideoSDKController();

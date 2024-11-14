@@ -24,4 +24,5 @@ router.get(
 );
 router.put('/update-zoom/:id', AuthMiddleware.authUser, VideoSDKController.updateRoom);
 router.delete('/delete-zoom/:id', AuthMiddleware.authUser, VideoSDKController.deleteRoom);
+router.put('/johnRoom/:id', AuthMiddleware.authUser, VideoSDKController.johnRoom)
 export default router;
