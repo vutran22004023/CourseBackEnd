@@ -1,5 +1,24 @@
 import mongoose from 'mongoose';
 
+const TeacherInfoSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  qualifications: {
+    type: String,
+    required: true,
+  },
+  experienceYears: {
+    type: Number,
+    required: true,
+  },
+  subjects: {
+    type: [String], // Array of subjects taught by the teacher
+    required: true,
+  },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -33,6 +52,20 @@ const UserSchema = new mongoose.Schema(
           return 'teacher';
         }
         return value;
+      },
+    },
+    teacherInfo: {
+      type: TeacherInfoSchema,
+      required: function () {
+        return this.role === 'teacher';
+      },
+    },
+    approvalStatus: {
+      type: String,
+      enum: ['not_qualified', 'pending', 'approved'],
+      default: 'not_qualified',
+      required: function () {
+        return this.role === 'teacher';
       },
     },
     status: {

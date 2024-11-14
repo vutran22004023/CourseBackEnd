@@ -66,7 +66,9 @@
 		"existed": "Tài khoản đã tồn tại!",
 		"password_reset": "Đặt lại mật khẩu thành công!",
 		"status_updated": "Cập nhập trạng thái thành công!",
-		"reset_password_email_sent": "Đã gữi form tới email để cài đặt lại mật khẩu."
+		"reset_password_email_sent": "Đã gữi form tới email để cài đặt lại mật khẩu.",
+		"formTeacherUser": "Đã nộp đơn xin việc giáo viên thành công",
+		"approveTeacher": "Trạng thái ứng dụng giáo viên đã được cập nhật"
 	},
 	"blog": {
 		"not_found": "Không tìm thấy bài đăng!",
