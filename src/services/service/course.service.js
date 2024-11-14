@@ -256,7 +256,7 @@ class CourseService {
           data.name = await Translate.translateText(data.name, 'en', 'vi');
           break;
         default:
-          data.nameEN = await Translate.translateText(data.name, lang, 'en');
+          data.nameEN = await Translate.translateText(data.name, 'auto', 'en');
           data.name = await Translate.translateText(data.nameEN, 'en', 'vi');
           break;
       }
@@ -298,7 +298,7 @@ class CourseService {
               video.childname = await Translate.translateText(video.childname, 'en', 'vi');
               break;
             default:
-              video.childnameEN = await Translate.translateText(video.childname, lang, 'en');
+              video.childnameEN = await Translate.translateText(video.childname, 'auto', 'en');
               video.childname = await Translate.translateText(video.childnameEN, 'en', 'vi');
               break;
           }
@@ -317,7 +317,7 @@ class CourseService {
             chapter.namechapter = await Translate.translateText(chapter.namechapter, 'en', 'vi');
             break;
           default:
-            chapter.namechapterEN = await Translate.translateText(chapter.namechapter, lang, 'en');
+            chapter.namechapterEN = await Translate.translateText(chapter.namechapter, 'auto', 'en');
             chapter.namechapter = await Translate.translateText(chapter.namechapterEN, 'en', 'vi');
             break;
         }
