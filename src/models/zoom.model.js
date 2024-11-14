@@ -62,11 +62,26 @@ const ZoomSchema = new mongoose.Schema({
     enum: ['not_started', 'in_progress', 'completed'],
     default: 'not_started',
   },
+  statusPrice: {
+    type: String,
+    enum: ['free', 'paid'],
+    default: 'free',
+  },
+  price: {
+      type: String,
+      required: function () {
+        return this.statusPrice === 'paid';
+      },
+  },
   startTime: {
     type: Date,
     required: true,
   },
   endTime: {
+    type: Date,
+    required: true,
+  },
+  timeRoom: {
     type: Date,
     required: true,
   },
