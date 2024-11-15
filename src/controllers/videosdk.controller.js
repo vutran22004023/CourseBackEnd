@@ -13,20 +13,6 @@ const API_KEY = process.env.VIDEOSDK_API_KEY;
 const SECRET = process.env.VIDEOSDK_SECRET_KEY;
 const URL = process.env.VIDEOSDK_URL;
 
-const createTokenVideoSDK = (permissions, userIdZoom) => {
-  const options = {
-    expiresIn: '120m',
-    algorithm: 'HS256',
-  };
-  const payload = {
-    apikey: API_KEY,
-    permissions: [...permissions, userIdZoom], // `ask_join` || `allow_mod`
-    version: 2,
-  };
-  const token = jwt.sign(payload, SECRET, options);
-  return token;
-};
-
 const createRoomVideoSDK = async (createToken) => {
   try {
     const axiosResponse = await axios.post(
@@ -40,29 +26,6 @@ const createRoomVideoSDK = async (createToken) => {
       }
     );
     return axiosResponse.data;
-  } catch (error) {
-    logger.error('Error creating meeting:', error);
-    const errorResponse = {
-      status: 200,
-      message: i18n.__('error.server'),
-    };
-    throw new Error(JSON.stringify(errorResponse));
-  }
-};
-
-const DeactivateRoomVideoSDK = async (token, roomId) => {
-  try {
-    const axiosResponse = await axios.post(
-      `${URL}/rooms/deactivate`,
-      { roomId: roomId }, // body của request
-      {
-        headers: {
-          Authorization: token,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return axiosResponse;
   } catch (error) {
     logger.error('Error creating meeting:', error);
     const errorResponse = {
@@ -122,6 +85,7 @@ class VideoSDKController {
       });
     }
   }
+
   async showUserTeacherZoom(req, res) {
     try {
       const cacheKey = req.originalUrl;
@@ -385,6 +349,7 @@ class VideoSDKController {
         });
       }else if (existingRoom.statusPrice === 'paid') {
         const payment = new Payment({
+          userIdTeacher: existingRoom.userIdZoom,
           userId,
           roomId: id,
           amount: existingRoom.price, 
@@ -405,6 +370,128 @@ class VideoSDKController {
       });
     }
 }
+
+async getAllPaymentsByUser(req, res) {
+  try {
+    const { userId } = req.params; 
+
+    // Find all payments for the given userId
+    const payments = await Payment.find({ userId });
+
+    // Check if there are any payments for this user
+    if (!payments || payments.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: i18n.__('payment.no_payments_found'),
+      });
+    }
+
+    // Return the list of payments
+    return res.status(200).json({
+      status: 200,
+      data: payments,
+      message: i18n.__('payment.all_payments_retrieved'),
+    });
+  } catch (err) {
+    logger.error('file: videosdk.controller.js:~ getAllPaymentsByUser error:', err);
+    return res.status(500).json({
+      status: 500,
+      message: i18n.__('error.server'),
+    });
+  }
+}
+
+async getAllPaymentsByUserTeacher(req, res) {
+  try {
+    const { userIdTeacher } = req.params; 
+
+    // Find all payments for the given userId
+    const payments = await Payment.find({ userIdTeacher });
+
+    // Check if there are any payments for this user
+    if (!payments || payments.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: i18n.__('payment.no_payments_found'),
+      });
+    }
+
+    // Return the list of payments
+    return res.status(200).json({
+      status: 200,
+      data: payments,
+      message: i18n.__('payment.all_payments_retrieved'),
+    });
+  } catch (err) {
+    logger.error('file: videosdk.controller.js:~ getAllPaymentsByUser error:', err);
+    return res.status(500).json({
+      status: 500,
+      message: i18n.__('error.server'),
+    });
+  }
+}
+
+async updatePaymentStatus(req, res) {
+  try {
+    const { paymentId } = req.params; // Payment ID from the route
+    const { status, userId } = req.body; // New status and userId from the request body
+
+    // Validate status
+    if (!['pending', 'completed', 'failed'].includes(status)) {
+      return res.status(400).json({
+        status: 400,
+        message: i18n.__('payment.invalid_status'),
+      });
+    }
+
+    // Find and update the payment status
+    const updatedPayment = await Payment.findByIdAndUpdate(
+      paymentId,
+      { status },
+      { new: true }
+    );
+
+    // Check if the payment exists
+    if (!updatedPayment) {
+      return res.status(404).json({
+        status: 404,
+        message: i18n.__('payment.not_found'),
+      });
+    }
+
+    // If payment is completed, add user to permissions
+    if (status === 'completed') {
+      // Ensure userId is provided
+      if (!userId) {
+        return res.status(400).json({
+          status: 400,
+          message: i18n.__('payment.missing_userId'),
+        });
+      }
+
+      // Update the room's permissions to include the user
+      await Zoom.findByIdAndUpdate(
+        updatedPayment.roomId,
+        { $addToSet: { permissions: userId } },
+        { new: true }
+      );
+    }
+
+    // Respond with success and updated payment data
+    return res.status(200).json({
+      status: 200,
+      data: updatedPayment,
+      message: i18n.__('payment.status_updated'),
+    });
+  } catch (err) {
+    logger.error('file: videosdk.controller.js:~ updatePaymentStatus error:', err);
+    return res.status(500).json({
+      status: 500,
+      message: i18n.__('error.server'),
+    });
+  }
+}
+
 }
 
 export default new VideoSDKController();

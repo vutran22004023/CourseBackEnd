@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { PayCourse, CourseModel, UserModel } from '../models/index.js'; // Import models
 import i18n from 'i18n';
 import logger from '../configs/logger.config.js';
+import { Payment } from '../models/paymentRoom.model.js';
+import { TeacherPaymentAnalytics } from '../models/TeacherPaymentAnalytics.model.js';
 
 class AlgorithmController {
   async getAnalyticCourse(req, res) {
@@ -164,6 +166,91 @@ class AlgorithmController {
     } catch (err) {
       logger.error(err);
       res.status(500).json({ error: i18n.__('error.server') });
+    }
+  }
+
+  async getMonthlyEarnings(req, res) {
+    try {
+      const { teacherId } = req.params; // Nhận Teacher ID từ params
+
+      // Lấy thời gian bắt đầu và kết thúc của tháng hiện tại
+      const startOfMonth = moment().startOf('month').toDate();
+      const endOfMonth = moment().endOf('month').toDate();
+
+      // Truy vấn thanh toán của Teacher trong tháng này và có trạng thái 'pending' (chưa thanh toán)
+      const payments = await Payment.aggregate([
+        {
+          $match: {
+            userIdTeacher: teacherId, // Chỉ lấy thanh toán của Teacher cụ thể
+            statusTeacher: 'unpaid', // Chỉ lấy những thanh toán chưa hoàn tất
+            createdAt: {
+              $gte: startOfMonth, // Thanh toán phải trong tháng hiện tại
+              $lte: endOfMonth,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$userIdTeacher', // Nhóm theo Teacher ID
+            totalAmount: { $sum: '$amount' }, // Tính tổng số tiền của Teacher trong tháng
+          },
+        },
+      ]);
+
+      // Kiểm tra nếu không có thanh toán nào
+      if (payments.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          message: 'No pending payments found for this teacher in the current month.',
+        });
+      }
+
+      // Trả về tổng số tiền của Teacher trong tháng này
+      return res.status(200).json({
+        status: 200,
+        teacherId: teacherId,
+        totalEarnings: payments[0].totalAmount,
+        message: 'Teacher earnings for the current month.',
+      });
+    } catch (err) {
+      console.error('Error while fetching teacher earnings:', err);
+      return res.status(500).json({
+        status: 500,
+        message: 'Error processing request.',
+      });
+    }
+  }
+
+  async getTeacherPaymentStatus(req, res) {
+    try {
+      const { teacherId } = req.query; 
+
+      if (!teacherId) {
+        return res.status(400).json({
+          success: false,
+          message: 'teacherId is required',
+        });
+      }
+
+      const payments = await TeacherPaymentAnalytics.find({ teacherId }).sort({ createdAt: -1 });
+
+      if (payments.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No payment requests found for this teacher.',
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: payments, // Trả về tất cả yêu cầu thanh toán của giáo viên
+      });
+    } catch (err) {
+      console.error('Error fetching teacher payment status:', err);
+      return res.status(500).json({
+        success: false,
+        message: 'Error fetching teacher payment status',
+      });
     }
   }
 }
