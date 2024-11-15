@@ -24,5 +24,14 @@ router.get(
 );
 router.put('/update-zoom/:id', AuthMiddleware.authUser, VideoSDKController.updateRoom);
 router.delete('/delete-zoom/:id', AuthMiddleware.authUser, VideoSDKController.deleteRoom);
-router.put('/johnRoom/:id', AuthMiddleware.authUser, VideoSDKController.johnRoom)
+router.put('/johnRoom/:id', AuthMiddleware.authUser, VideoSDKController.johnRoom);
+router.get('/get-all-payments-by-user/:userId', AuthMiddleware.authUser, VideoSDKController.getAllPaymentsByUser);
+router.get(
+  '/get-all-payments-by-user-teacher/:userId',
+  AuthMiddleware.authUser,
+  VideoSDKController.getAllPaymentsByUser
+);
+
+router.put('/update-payment-status/:paymentId', AuthMiddleware.authUser, VideoSDKController.updatePaymentStatus);
+
 export default router;
