@@ -68,10 +68,10 @@ const ZoomSchema = new mongoose.Schema({
     default: 'free',
   },
   price: {
-      type: String,
-      required: function () {
-        return this.statusPrice === 'paid';
-      },
+    type: String,
+    required: function () {
+      return this.statusPrice === 'paid';
+    },
   },
   startTime: {
     type: Date,

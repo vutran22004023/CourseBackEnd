@@ -6,18 +6,18 @@ import i18n from '../configs/i18n.config.js';
 const questionSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, i18n.__('course.missing_question_title')],
+    required: [true, () => i18n.__('course.missing_question_title')],
   },
   options: {
     type: [
       {
         label: {
           type: String,
-          required: [true, i18n.__('course.missing_answer_label')],
+          required: [true, () => i18n.__('course.missing_answer_label')],
         },
         text: {
           type: String,
-          required: [true, i18n.__('course.missing_answer')],
+          required: [true, () => i18n.__('course.missing_answer')],
         },
       },
     ],
@@ -26,25 +26,25 @@ const questionSchema = new mongoose.Schema({
         validator: function (arr) {
           return arr.length >= 2; // Ensure at least two answer options
         },
-        message: i18n.__('course.more_answer'),
+        message: () => i18n.__('course.more_answer'),
       },
       {
         validator: function (arr) {
           const labels = arr.map((option) => option.label);
           return labels.length === new Set(labels).size;
         },
-        message: i18n.__('course.unique_answer_label'),
+        message: () => i18n.__('course.unique_answer_label'),
       },
     ],
   },
   correctAnswer: {
     type: String,
-    required: [true, i18n.__('course.missing_correct_answer')],
+    required: [true, () => i18n.__('course.missing_correct_answer')],
     validate: {
       validator: function (value) {
         return this.options.some((option) => option.label === value);
       },
-      message: i18n.__('course.missing_correct_answer_label'),
+      message: () => i18n.__('course.missing_correct_answer_label'),
     },
   },
 });
@@ -52,8 +52,13 @@ const videoSchema = new mongoose.Schema(
   {
     childname: {
       type: String,
-      maxLength: [255, i18n.__('video.title_too_long')],
-      required: [true, i18n.__('video.missing_title')],
+      required: [true, () => i18n.__('video.missing_title')],
+      validate: {
+        validator: function (value) {
+          return value.length > 255;
+        },
+        message: () => i18n.__('video.title_too_long'),
+      },
     },
     childnameEN: {
       type: String,
@@ -69,7 +74,7 @@ const videoSchema = new mongoose.Schema(
         function () {
           return this.videoType === 'video';
         },
-        i18n.__('video.missing_link'),
+        () => i18n.__('video.missing_link'),
       ],
       default: null,
     },
@@ -109,8 +114,13 @@ const chapterSchema = new mongoose.Schema(
   {
     namechapter: {
       type: String,
-      maxLength: [255, i18n.__('chapter.title_too_long')],
-      required: [true, i18n.__('chapter.missing_title')],
+      required: [true, () => i18n.__('chapter.missing_title')],
+      validate: {
+        validator: function (value) {
+          return value.length > 255;
+        },
+        message: () => i18n.__('chapter.title_too_long'),
+      },
     },
     namechapterEN: {
       type: String,
@@ -126,20 +136,29 @@ const courseSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      maxLength: [255, i18n.__('course.title_too_long')],
-      required: [true, i18n.__('course.missing_title')],
+      required: [true, () => i18n.__('course.missing_title')],
+      validate: {
+        validator: function (value) {
+          return value.length > 255;
+        },
+        message: () => i18n.__('course.title_too_long'),
+      },
     },
     nameEN: {
       type: String,
     },
     description: {
       type: String,
-      // required: [true, 'Chưa có mô tả khóa học'],
     },
     image: {
       type: String,
-      maxLength: [255, i18n.__('course.image_link_too_long')],
       default: null,
+      validate: {
+        validator: function (value) {
+          return value.length > 255;
+        },
+        message: () => i18n.__('course.image_link_too_long'),
+      },
     },
     video: {
       type: String,
@@ -148,8 +167,8 @@ const courseSchema = new mongoose.Schema(
     chapters: [chapterSchema],
     price: {
       type: String,
-      required: [true, i18n.__('course.missing_type')],
-      enum: { values: ['free', 'paid'], message: i18n.__('course.type_limit') },
+      required: [true, () => i18n.__('course.missing_type')],
+      enum: { values: ['free', 'paid'], message: () => i18n.__('course.type_limit') },
     },
     priceAmount: {
       type: Number,
@@ -157,13 +176,13 @@ const courseSchema = new mongoose.Schema(
         function () {
           return this.price === 'paid';
         },
-        i18n.__('course.missing_price'),
+        () => i18n.__('course.missing_price'),
       ],
     },
     slug: {
       type: String,
       unique: true,
-      required: [true, i18n.__('course.missing_slug')],
+      required: [true, () => i18n.__('course.missing_slug')],
     },
     view: {
       type: Number,
