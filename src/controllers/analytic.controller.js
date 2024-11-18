@@ -223,7 +223,7 @@ class AlgorithmController {
 
   async getTeacherPaymentStatus(req, res) {
     try {
-      const { teacherId } = req.query; 
+      const { teacherId } = req.query;
 
       if (!teacherId) {
         return res.status(400).json({

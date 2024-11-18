@@ -149,7 +149,7 @@ class UserController {
     }
   }
 
-  async formTeacherUser (req, res) {
+  async formTeacherUser(req, res) {
     const { userId, name, qualifications, experienceYears, subjects } = req.body;
     try {
       let user = await UserModel.findOne({
@@ -175,21 +175,21 @@ class UserController {
     }
   }
 
-  async approveTeacher (req, res) {
-      const { userId } = req.params;
-      const { approvalStatus } = req.body;
-      try {
-        let user = await UserModel.findOne({
-          _id: userId,
-        }).select('-password');
-        if (!user) {
-          return res.status(404).json({ message: i18n.__('user.not_found') });
-        }
-        user.approvalStatus = 'teacher';
-        user.approvalStatus = approvalStatus;
-        await user.save();
-        res.status(200).json({ message: i18n.__('user.approveTeacher'), user });
-      } catch (err) {
+  async approveTeacher(req, res) {
+    const { userId } = req.params;
+    const { approvalStatus } = req.body;
+    try {
+      let user = await UserModel.findOne({
+        _id: userId,
+      }).select('-password');
+      if (!user) {
+        return res.status(404).json({ message: i18n.__('user.not_found') });
+      }
+      user.approvalStatus = 'teacher';
+      user.approvalStatus = approvalStatus;
+      await user.save();
+      res.status(200).json({ message: i18n.__('user.approveTeacher'), user });
+    } catch (err) {
       return res.status(500).json({
         message: i18n.__('error.server'),
       });
@@ -200,29 +200,29 @@ class UserController {
     try {
       const { status } = req.params;
       const { page = 1, limit = 10 } = req.query; // Default page 1, limit 10
-  
+
       // Validate the status parameter
       if (!['not_qualified', 'pending', 'approved'].includes(status)) {
         return res.status(400).json({ message: 'Invalid approval status' });
       }
-  
+
       // Convert page and limit to integers
       const pageNumber = parseInt(page, 10);
       const limitNumber = parseInt(limit, 10);
-  
+
       // Calculate the skip value for pagination
       const skip = (pageNumber - 1) * limitNumber;
-  
+
       // Query teacher applicants with pagination and sorting by `createdAt` in descending order
       const teacherApplicants = await UserModel.find({ approvalStatus: status })
         .sort({ createdAt: -1 }) // Sort by timestamps in descending order
         .skip(skip)
         .limit(limitNumber)
         .select('-password');
-  
+
       // Get the total count of applicants for the given status
       const totalApplicants = await UserModel.countDocuments({ approvalStatus: status });
-  
+
       res.status(200).json({
         status,
         message: `Teacher applicants with status: ${status}`,
@@ -237,7 +237,6 @@ class UserController {
       });
     }
   }
-  
 }
 
 export default new UserController();

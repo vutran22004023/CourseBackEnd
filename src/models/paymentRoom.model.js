@@ -6,7 +6,7 @@ const PaymentSchema = new mongoose.Schema({
   roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Zoom', required: true },
   amount: { type: Number, required: true },
   status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
-  statusTeacher: { type: String, enum: ['unpaid','pending', 'completed', 'failed'], default: 'unpaid' },
+  statusTeacher: { type: String, enum: ['unpaid', 'pending', 'completed', 'failed'], default: 'unpaid' },
   createdAt: { type: Date, default: Date.now },
 });
 
