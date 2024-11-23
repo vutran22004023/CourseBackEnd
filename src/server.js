@@ -75,7 +75,7 @@ const openapiSpecification = swaggerJsdoc(options);
 
 // Get language for I18N
 app.use((req, _, next) => {
-  let lang = req.query.lang || req.cookies.lang || req.get('Accept-Language') || i18n.getLocale();
+  let lang = req.query.lang || req.cookies.language || req.get('Accept-Language') || i18n.getLocale();
   i18n.setLocale(lang);
   next();
 });
