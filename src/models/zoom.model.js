@@ -83,11 +83,6 @@ const ZoomSchema = new mongoose.Schema({
   },
   timeRoom: {
     type: Date,
-    required: true,
-  },
-  token: {
-    type: String,
-    required: true,
   },
   roomDetails: RoomDetailsSchema,
   permissions: [{ type: String }],
