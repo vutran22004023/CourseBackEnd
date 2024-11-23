@@ -36,11 +36,33 @@ const createRoomVideoSDK = async (createToken) => {
   }
 };
 
+const createTokenVideoSDK = (userIdZoom) => {
+  const options = {
+    expiresIn: '120m',
+    algorithm: 'HS256',
+  };
+  const payload = {
+    apikey: API_KEY,
+    permissions: [userIdZoom], // `ask_join` || `allow_mod`
+    version: 2,
+  };
+  const token = jwt.sign(payload, SECRET, options);
+  return token;
+};
+
 // Controller cho VideoSDK
 class VideoSDKController {
   async createRoomZoom(req, res) {
     try {
       const { title, startTime, endTime, userIdZoom, price, statusPrice, timeRoom } = req.body;
+
+      const createToken = createTokenVideoSDK(userIdZoom);
+      if (!createToken) {
+        return res.status(200).json({
+          status: 400,
+          message: i18n.__('room.token_error'),
+        });
+      }
 
       const createIdZoom = await createRoomVideoSDK(createToken);
 
@@ -258,7 +280,7 @@ class VideoSDKController {
 
   async updateRoom(req, res) {
     const { id } = req.params;
-    const { title, startTime, endTime, permissions, status } = req.body;
+    const { title, startTime, endTime, permissions, status, timeRoom } = req.body;
     try {
       const existingRoom = await Zoom.findById(id);
       if (!existingRoom) {
@@ -274,6 +296,7 @@ class VideoSDKController {
       existingRoom.startTime = startTime || existingRoom.startTime;
       existingRoom.endTime = endTime || existingRoom.endTime;
       existingRoom.permissions = permissions || existingRoom.permissions;
+      existingRoom.timeRoom = timeRoom || existingRoom.timeRoom;
 
       await existingRoom.save();
 
