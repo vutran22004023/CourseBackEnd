@@ -19,6 +19,9 @@ const postSchema = new mongoose.Schema(
     tag: {
       type: String,
     },
+    image: {
+      type: String,
+    },
     isConfirmed: {
       type: Boolean,
       default: false,

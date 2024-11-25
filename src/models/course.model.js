@@ -53,12 +53,6 @@ const videoSchema = new mongoose.Schema(
     childname: {
       type: String,
       required: [true, () => i18n.__('video.missing_title')],
-      validate: {
-        validator: function (value) {
-          return value.length > 255;
-        },
-        message: () => i18n.__('video.title_too_long'),
-      },
     },
     childnameEN: {
       type: String,
@@ -115,12 +109,6 @@ const chapterSchema = new mongoose.Schema(
     namechapter: {
       type: String,
       required: [true, () => i18n.__('chapter.missing_title')],
-      validate: {
-        validator: function (value) {
-          return value.length > 255;
-        },
-        message: () => i18n.__('chapter.title_too_long'),
-      },
     },
     namechapterEN: {
       type: String,
@@ -137,12 +125,6 @@ const courseSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, () => i18n.__('course.missing_title')],
-      validate: {
-        validator: function (value) {
-          return value.length > 255;
-        },
-        message: () => i18n.__('course.title_too_long'),
-      },
     },
     nameEN: {
       type: String,
@@ -153,12 +135,6 @@ const courseSchema = new mongoose.Schema(
     image: {
       type: String,
       default: null,
-      validate: {
-        validator: function (value) {
-          return value.length > 255;
-        },
-        message: () => i18n.__('course.image_link_too_long'),
-      },
     },
     video: {
       type: String,
