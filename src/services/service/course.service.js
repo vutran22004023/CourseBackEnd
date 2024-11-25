@@ -102,8 +102,6 @@ class CourseService {
 
   async createCourse(data) {
     try {
-      const result = await this.dataHandle(data);
-      if (result) return result;
 
       // Create the new course
       const createCourse = await CourseModel.create(data);
@@ -122,8 +120,6 @@ class CourseService {
   }
 
   async updateCourse(courseId, reqData) {
-    const result = await this.dataHandle(reqData);
-    if (result) return result;
 
     const session = await mongoose.startSession();
     session.startTransaction();

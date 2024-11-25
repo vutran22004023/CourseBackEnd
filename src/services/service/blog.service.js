@@ -46,10 +46,10 @@ class BlogService {
   async createPost(req) {
     try {
       this.dataHandle(req.body);
-      const { title, content, tag = null } = req.body;
+      const { title, content, tag = null, image } = req.body;
 
       // Create the new post
-      const createPost = await Post.create({ userId: req.user.id, title, content, tag });
+      const createPost = await Post.create({ userId: req.user.id, title, content, tag, image });
       return {
         status: 200,
         data: createPost,
