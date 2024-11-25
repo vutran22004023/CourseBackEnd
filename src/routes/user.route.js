@@ -15,5 +15,5 @@ router.post('/create-user', AuthMiddleware.authAdmin, UserController.createUser)
 // New routes for teacher approval
 router.get('/teacher-applicants/status/:status', AuthMiddleware.authAdmin, UserController.approveTeacherStatus);
 router.put('/form-teacher-user', AuthMiddleware.authUser, UserController.formTeacherUser);
-router.put('/approve-teacher/:id', AuthMiddleware.authAdmin, UserController.approveTeacher);
+router.put('/approve-teacher/:userId', AuthMiddleware.authAdmin, UserController.approveTeacher);
 export default router;
