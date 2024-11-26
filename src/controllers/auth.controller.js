@@ -81,10 +81,10 @@ class AuthController {
 
   async Register(req, res) {
     try {
-      const { name, email, password, confirmPassword, role } = req.body;
+      const { name, email, password, confirmPassword } = req.body;
       const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
       const isCheckEmail = mailformat.test(email);
-      if (!name || !email || !password || !confirmPassword || role) {
+      if (!name || !email || !password || !confirmPassword) {
         return res.status(200).json({
           status: 'ERR',
           message: i18n.__('error.bad_request'),
